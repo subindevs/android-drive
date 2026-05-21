@@ -44,3 +44,6 @@ fun LinkId.revisionUid(volumeId: VolumeId, revisionId: String): RevisionUid = Le
     linkId = id,
     revisionId = revisionId,
 )
+
+val LinkId.decryptedFileName: String
+    get() = id

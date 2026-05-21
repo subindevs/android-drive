@@ -29,7 +29,9 @@
   <string name="common_type">Tipo</string>
   <string name="common_yes">Sí</string>
   <string name="common_download">Descargar</string>
+  <string name="common_downloaded">Descargado</string>
   <string name="common_downloading">Descargando</string>
+  <string name="common_waiting_for_download">Esperando para descargar</string>
   <string name="common_link">Enlace</string>
   <string name="common_password">Contraseña</string>
   <string name="common_retry">Reintentar</string>
@@ -61,6 +63,7 @@
   <string name="common_delete_permanently_action">Eliminar permanentemente</string>
   <string name="common_make_available_offline_action">Hacer disponible sin conexión</string>
   <string name="common_remove_from_offline_available_action">Eliminar del modo disponible sin conexión</string>
+  <string name="common_remove_all_from_offline_available_action">Borrar todo del modo disponible sin conexión</string>
   <string name="common_get_link_action">Obtener enlace</string>
   <string name="common_manage_link_action">Gestionar enlace</string>
   <string name="common_manage_access_action">Gestionar acceso</string>
@@ -79,6 +82,8 @@
   <string name="common_tag_photo_action">Escanear la foto para detectar etiquetas</string>
   <string name="common_save_as_action">Guardar como</string>
   <string name="common_open_action">Abrir</string>
+  <string name="common_back_action">Atrás</string>
+  <string name="common_open_side_menu_action">Abrir menú lateral</string>
   <!-- endregion -->
   <!-- region Common file types -->
   <string name="common_type_audio">Audio</string>

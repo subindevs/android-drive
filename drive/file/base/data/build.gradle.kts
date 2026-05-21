@@ -32,4 +32,5 @@ driveModule(
     api(project(":drive:base:data"))
     api(project(":drive:file:base:domain"))
     implementation(libs.retrofit)
+    implementation(libs.core.utilKotlin)
 }

@@ -42,6 +42,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.take
+import me.proton.android.drive.ui.effect.OfflineEffect
 import kotlinx.coroutines.launch
 import me.proton.android.drive.extension.log
 import me.proton.android.drive.ui.common.onClick
@@ -68,6 +69,7 @@ import me.proton.core.drive.drivelink.crypto.domain.usecase.GetDecryptedDriveLin
 import me.proton.core.drive.drivelink.domain.entity.DriveLink
 import me.proton.core.drive.drivelink.domain.extension.isNameEncrypted
 import me.proton.core.drive.drivelink.download.domain.usecase.GetDownloadProgress
+import me.proton.core.drive.drivelink.offline.domain.usecase.GetOfflineDriveLinksCount
 import me.proton.core.drive.drivelink.offline.domain.usecase.GetPagedOfflineDriveLinksList
 import me.proton.core.drive.files.presentation.state.FilesViewState
 import me.proton.core.drive.link.domain.entity.AlbumId
@@ -100,6 +102,7 @@ class OfflineViewModel @Inject constructor(
     private val configurationProvider: ConfigurationProvider,
     private val openProtonDocumentInBrowser: OpenProtonDocumentInBrowser,
     private val broadcastMessages: BroadcastMessages,
+    getOfflineDriveLinksCount: GetOfflineDriveLinksCount,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel(), UserViewModel by UserViewModel(savedStateHandle) {
     private val shareId = savedStateHandle.get<String>(Screen.Files.SHARE_ID)
@@ -125,6 +128,15 @@ class OfflineViewModel @Inject constructor(
         .cachedIn(viewModelScope)
         .shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)
     private val isRootFolder: Boolean = folderId == null || folderId.id.isEmpty()
+    private val _offlineEffect = MutableSharedFlow<OfflineEffect>()
+    val offlineEffect: Flow<OfflineEffect> = _offlineEffect.asSharedFlow()
+    val removeAllOfflineIconState: Flow<RemoveAllOfflineIconState> = if (isRootFolder) {
+        getOfflineDriveLinksCount(userId).map { count ->
+            if (count > 0) RemoveAllOfflineIconState.VISIBLE else RemoveAllOfflineIconState.HIDDEN
+        }
+    } else {
+        flowOf(RemoveAllOfflineIconState.HIDDEN)
+    }
     private val _listEffect = MutableSharedFlow<ListEffect>()
     private val listContentState = MutableStateFlow<ListContentState>(ListContentState.Loading)
     private val listContentAppendingState = MutableStateFlow<ListContentAppendingState>(ListContentAppendingState.Idle)
@@ -266,6 +278,12 @@ class OfflineViewModel @Inject constructor(
         null
     }
 
+    fun onMoreOptionsClicked() {
+        viewModelScope.launch {
+            _offlineEffect.emit(OfflineEffect.MoreOptions)
+        }
+    }
+
     private fun onToggleLayout() {
         viewModelScope.launch {
             toggleLayoutType(
@@ -296,4 +314,8 @@ class OfflineViewModel @Inject constructor(
                     type = BroadcastMessage.Type.ERROR,
                 )
             }
+}
+
+enum class RemoveAllOfflineIconState {
+    HIDDEN, VISIBLE
 }

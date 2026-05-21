@@ -29,7 +29,9 @@
   <string name="common_type">Typ</string>
   <string name="common_yes">Ja</string>
   <string name="common_download">Ladda ner</string>
+  <string name="common_downloaded">Nerladdat</string>
   <string name="common_downloading">Laddar ner</string>
+  <string name="common_waiting_for_download">Väntar på nedladdning</string>
   <string name="common_link">Länk</string>
   <string name="common_password">Lösenord</string>
   <string name="common_retry">Försök igen</string>
@@ -61,6 +63,7 @@
   <string name="common_delete_permanently_action">Ta bort permanent</string>
   <string name="common_make_available_offline_action">Gör tillgänglig offline</string>
   <string name="common_remove_from_offline_available_action">Ta bort från tillgänglighet från offline</string>
+  <string name="common_remove_all_from_offline_available_action">Remove all from offline available</string>
   <string name="common_get_link_action">Få länk</string>
   <string name="common_manage_link_action">Hantera länk</string>
   <string name="common_manage_access_action">Hantera åtkomst</string>
@@ -79,6 +82,8 @@
   <string name="common_tag_photo_action">Skanna foto efter taggar</string>
   <string name="common_save_as_action">Spara som</string>
   <string name="common_open_action">Öppna</string>
+  <string name="common_back_action">Tillbaka</string>
+  <string name="common_open_side_menu_action">Open side menu</string>
   <!-- endregion -->
   <!-- region Common file types -->
   <string name="common_type_audio">Ljud</string>

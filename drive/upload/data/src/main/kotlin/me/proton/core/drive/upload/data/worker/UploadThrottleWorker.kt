@@ -36,6 +36,7 @@ import me.proton.core.drive.base.data.extension.log
 import me.proton.core.drive.base.data.workmanager.addTags
 import me.proton.core.drive.base.domain.extension.getOrNull
 import me.proton.core.drive.base.domain.log.LogTag.UPLOAD
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.drivelink.domain.usecase.UseSdkForUpload
 import me.proton.core.drive.linkupload.domain.entity.NetworkTypeProviderType
 import me.proton.core.drive.linkupload.domain.entity.UploadFileLink
@@ -62,7 +63,7 @@ class UploadThrottleWorker @AssistedInject constructor(
     private val userId =
         UserId(requireNotNull(inputData.getString(WorkerKeys.KEY_USER_ID)) { "User id is required" })
 
-    override suspend fun doWork(): Result = runCatching {
+    override suspend fun doWork(): Result = coRunCatching {
         getNextUploadFileLinks(userId).getOrThrow().also { uploadFileLinks ->
             CoreLogger.d(UPLOAD, "UploadThrottleWorker($runAttemptCount) upload ${uploadFileLinks.size} files")
         }.forEach { uploadFileLink ->

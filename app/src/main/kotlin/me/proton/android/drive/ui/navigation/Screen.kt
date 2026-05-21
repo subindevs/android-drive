@@ -530,6 +530,12 @@ sealed class Screen(val route: String) {
     data object OfflineFiles : Screen(filesBrowsableRoute("offline")) {
         operator fun invoke(userId: UserId, folderId: FolderId? = null, folderName: String? = null) =
             filesBrowsableBuildRoute("offline", userId, folderId, folderName)
+
+        object Dialogs {
+            data object ConfirmRemoveAllOffline : Screen("offline/{userId}/confirm-remove-all") {
+                operator fun invoke(userId: UserId) = "offline/${userId.id}/confirm-remove-all"
+            }
+        }
     }
 
     data object PagerPreview : Screen("pager/{pagerType}/preview/{userId}/shares/{shareId}/files/{fileId}?photoTag={photoTag}&albumShareId={albumShareId}&albumId={albumId}") {

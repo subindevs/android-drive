@@ -55,7 +55,7 @@ class CreateShareUrlInfo @Inject constructor(
             urlPassword = randomUrlPassword.toByteArray(),
             sharePassphrase = share.passphrase,
         ).getOrThrow()
-        val creatorEmail = getUserEmail(userId, addressId)
+        val creatorEmail = getUserEmail(userId, addressId).getOrThrow()
         ShareUrlInfo(
             expirationDuration = null,
             maxAccesses = MAX_ACCESSES,

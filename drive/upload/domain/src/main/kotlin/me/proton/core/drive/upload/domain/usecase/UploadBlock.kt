@@ -59,7 +59,7 @@ class UploadBlock @Inject constructor(
                     accumulator.second to value
                 }.drop(1)
                     .onEach{ (prev, next) ->
-                        uploadSpeedManager.add(uploadFileLink.userId, next - prev)
+                        uploadSpeedManager.add(uploadFileLink.userId, usedSdk = false, next - prev)
                     }.launchIn(scope)
                 fileRepository.uploadFile(
                     userId = userId,

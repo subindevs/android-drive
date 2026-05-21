@@ -78,7 +78,6 @@ import me.proton.core.drive.base.presentation.component.CircleSelection
 import me.proton.core.drive.base.presentation.component.EncryptedItem
 import me.proton.core.drive.base.presentation.component.LetterBadge
 import me.proton.core.drive.base.presentation.component.LinearProgressIndicator
-import me.proton.core.drive.base.presentation.component.text.TextWithMiddleEllipsis
 import me.proton.core.drive.base.presentation.extension.asHumanReadableString
 import me.proton.core.drive.base.presentation.extension.currentLocale
 import me.proton.core.drive.drivelink.domain.entity.DriveLink
@@ -311,10 +310,11 @@ fun DetailsTitle(
         if (isEncrypted) {
             EncryptedItem()
         } else {
-            TextWithMiddleEllipsis(
+            Text(
                 text = title,
                 style = ProtonTheme.typography.default(enabled = isEnabled),
                 maxLines = 1,
+                overflow = TextOverflow.MiddleEllipsis,
                 modifier = Modifier.testTag(FilesTestTag.listDetailsTitle)
             )
         }

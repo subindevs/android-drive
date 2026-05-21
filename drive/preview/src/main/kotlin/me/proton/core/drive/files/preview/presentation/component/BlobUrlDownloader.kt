@@ -24,6 +24,7 @@ import android.util.Base64InputStream
 import android.webkit.JavascriptInterface
 import me.proton.core.drive.base.data.extension.exportToMediaStoreDownloads
 import me.proton.core.drive.base.domain.log.LogTag
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.util.kotlin.CoreLogger
 
 class BlobUrlDownloader(
@@ -36,7 +37,7 @@ class BlobUrlDownloader(
     fun processBase64Content(
         base64Content: String,
         mimeType: String,
-    ) = runCatching {
+    ) = coRunCatching {
         CoreLogger.d(
             tag = LogTag.WEBVIEW,
             message ="BlobUrlDownloader processing base64 content, type $mimeType, size ${base64Content.length}",

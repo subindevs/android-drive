@@ -70,7 +70,7 @@ class GenerateShareKey @Inject constructor(
     suspend operator fun invoke(userId: UserId): Result<Key.Node> = coRunCatching {
         invoke(
             userId = userId,
-            addressId = getAddressId(userId),
+            addressId = getAddressId(userId).getOrThrow(),
         ).getOrThrow()
     }
 }

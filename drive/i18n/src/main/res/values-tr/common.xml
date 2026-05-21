@@ -29,7 +29,9 @@
   <string name="common_type">Tür</string>
   <string name="common_yes">Evet</string>
   <string name="common_download">İndir</string>
+  <string name="common_downloaded">İndirildi</string>
   <string name="common_downloading">İndiriliyor</string>
+  <string name="common_waiting_for_download">İndirilmesi bekleniyor</string>
   <string name="common_link">Bağlantı</string>
   <string name="common_password">Parola</string>
   <string name="common_retry">Yeniden dene</string>
@@ -61,6 +63,7 @@
   <string name="common_delete_permanently_action">Kalıcı olarak sil</string>
   <string name="common_make_available_offline_action">Çevrim dışı kullanılabilsin</string>
   <string name="common_remove_from_offline_available_action">Çevrim dışı kullanılamasın</string>
+  <string name="common_remove_all_from_offline_available_action">Tümünü çevrim dışı kullanılabileceklerden kaldır</string>
   <string name="common_get_link_action">Bağlantıyı al</string>
   <string name="common_manage_link_action">Bağlantıyı yönet</string>
   <string name="common_manage_access_action">Erişim yönetimi</string>
@@ -79,6 +82,8 @@
   <string name="common_tag_photo_action">Fotoğrafı etiketler için tara</string>
   <string name="common_save_as_action">Farklı kaydet</string>
   <string name="common_open_action">Aç</string>
+  <string name="common_back_action">Geri</string>
+  <string name="common_open_side_menu_action">Kenar menüsünü aç</string>
   <!-- endregion -->
   <!-- region Common file types -->
   <string name="common_type_audio">Ses</string>
@@ -91,12 +96,12 @@
   <string name="common_type_pdf">PDF belgesi</string>
   <string name="common_type_ppt">Sunum</string>
   <string name="common_type_proton_doc">Proton belgesi</string>
-  <string name="common_type_proton_sheet">Proton hesap tablosu</string>
+  <string name="common_type_proton_sheet">Proton elektronik tablosu</string>
   <string name="common_type_text">Metin</string>
   <string name="common_type_trustedkey">Güvenilen anahtar</string>
   <string name="common_type_unknown">Binary</string>
   <string name="common_type_video">Görüntü</string>
-  <string name="common_type_xls">Hesap tablosu</string>
+  <string name="common_type_xls">Elektronik tablo</string>
   <string name="common_type_xml">XML dosyası</string>
   <string name="common_type_zip">Arşiv</string>
   <!-- endregion -->

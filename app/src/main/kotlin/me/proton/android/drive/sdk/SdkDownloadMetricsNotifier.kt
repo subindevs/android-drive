@@ -36,7 +36,7 @@ import me.proton.core.drive.observability.domain.metrics.sdk.DownloadErrorsTrans
 import me.proton.core.drive.observability.domain.metrics.sdk.DownloadSuccessRateTotal
 import me.proton.core.drive.observability.domain.usecase.EnqueueObservabilityEvent
 import me.proton.core.drive.user.domain.extension.isWithoutProtonSubscription
-import me.proton.core.util.kotlin.CoreLogger
+import me.proton.drive.sdk.telemetry.DownloadError
 import me.proton.drive.sdk.telemetry.DownloadEvent
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
@@ -52,26 +52,30 @@ class SdkDownloadMetricsNotifier @Inject constructor(
     suspend operator fun invoke(downloadEvent: DownloadEvent) {
         val volumeType = downloadEvent.volumeType.toVolumeType()
         val error = downloadEvent.error
-        if (error == null) {
+        if (error != DownloadError.NETWORK_ERROR) {
             notifyDownloadSuccessRateTotalMetric(
                 volumeType = volumeType,
-                isSuccess = true,
+                isSuccess = error == null,
             )
-        } else {
+        }
+        if (error != null) {
             val type = error.toType()
             if (type == DownloadErrorsTotal.Type.unknown) {
                 reportError(
                     tag = DRIVE_SDK,
-                    message = "Unknown download error: $error\n${downloadEvent.originalError}",
+                    message = "Unknown download error: ${downloadEvent.originalError}",
                 )
             }
             notifyDownloadErrorsTotalMetric(
                 volumeType = volumeType,
                 type = type
             )
-            notifyDownloadErroringUsersTotalMetric(
-                volumeType = volumeType,
-            )
+
+            if (error != DownloadError.NETWORK_ERROR) {
+                notifyDownloadErroringUsersTotalMetric(
+                    volumeType = volumeType,
+                )
+            }
             notifyDownloadErrorsTransferSizeHistogramMetric(
                 downloadedSize = downloadEvent.approximateDownloadedSize
             )

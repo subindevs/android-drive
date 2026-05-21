@@ -22,8 +22,10 @@ import me.proton.core.drive.backup.data.db.entity.BackupFileEntity
 import me.proton.core.drive.backup.domain.entity.BackupFile
 import me.proton.core.drive.base.domain.entity.TimestampS
 import me.proton.core.drive.base.domain.extension.bytes
+import me.proton.core.drive.base.domain.log.LogTag.BACKUP
 import me.proton.core.drive.link.domain.entity.FolderId
 import me.proton.core.drive.share.domain.entity.ShareId
+import me.proton.core.util.kotlin.CoreLogger
 
 
 fun BackupFileEntity.toBackupFile() = BackupFile(
@@ -36,10 +38,21 @@ fun BackupFileEntity.toBackupFile() = BackupFile(
     mimeType = mimeType,
     name = name,
     hash = hash,
-    size = size.bytes,
+    size = size.fixNegativeSize().bytes,
     state = state,
     date = TimestampS(createTime),
     uploadPriority = uploadPriority,
     attempts = attempts,
     lastModified = lastModified?.let(::TimestampS),
 )
+
+// Fix negative size stored due to getInt overflow
+private fun Long.fixNegativeSize(): Long = if (this < 0L) {
+    (this + 0x100000000L).also { fixed ->
+        if (fixed < 0L) {
+            CoreLogger.e(BACKUP, "Unexpected negative size: $this, fixed: $fixed")
+        }
+    }
+} else {
+    this
+}

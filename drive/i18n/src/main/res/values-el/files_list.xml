@@ -63,6 +63,9 @@
   <string name="files_confirm_empty_trash_title">Άδειασμα διαγραμμένων;</string>
   <string name="files_confirm_empty_trash_message">Τα στοιχεία στα διαγραμμένα θα διαγραφούν οριστικά. Δεν μπορείτε να αναιρέσετε αυτήν την ενέργεια.</string>
   <string name="files_confirm_empty_trash_confirm_action">Άδειασμα Διαγραμμένων</string>
+  <string name="files_confirm_remove_all_offline_title">Κατάργηση όλων από εκτός σύνδεσης;</string>
+  <string name="files_confirm_remove_all_offline_message">Τα αρχεία δε θα είναι πλέον διαθέσιμα εκτός σύνδεσης.</string>
+  <string name="files_confirm_remove_all_offline_confirm_action">Κατάργηση όλων</string>
   <string name="files_display_file_info_action">Λεπτομέρειες αρχείου</string>
   <string name="files_display_folder_info_action">Λεπτομέρειες φακέλου</string>
 </resources>

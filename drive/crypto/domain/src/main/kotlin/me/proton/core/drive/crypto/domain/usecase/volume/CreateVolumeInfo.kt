@@ -51,7 +51,7 @@ class CreateVolumeInfo @Inject constructor(
         type: Volume.Type,
     ): Result<VolumeInfo> =
         generateShareAndFolderKey(userId, signatureAddress).mapCatching { (shareKey, folderKey) ->
-            val addressId = getAddressId(userId)
+            val addressId = getAddressId(userId).getOrThrow()
             val addressKeyId = getAddressKeyId(userId, addressId).getOrThrow().id
             when (type) {
                 Volume.Type.PHOTO -> VolumeInfo.Photo(

@@ -63,6 +63,9 @@
   <string name="files_confirm_empty_trash_title">Esvaziar lixeira?</string>
   <string name="files_confirm_empty_trash_message">Os itens da lixeira serão apagados permanentemente. Esta ação não poderá ser desfeita.</string>
   <string name="files_confirm_empty_trash_confirm_action">Esvaziar lixeira</string>
+  <string name="files_confirm_remove_all_offline_title">Remover todos do off-line?</string>
+  <string name="files_confirm_remove_all_offline_message">Os arquivos não estarão mais disponíveis off-line.</string>
+  <string name="files_confirm_remove_all_offline_confirm_action">Remover todos</string>
   <string name="files_display_file_info_action">Detalhes do arquivo</string>
   <string name="files_display_folder_info_action">Detalhes da pasta</string>
 </resources>

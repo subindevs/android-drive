@@ -18,35 +18,27 @@
 
 package me.proton.core.drive.drivelink.domain.usecase
 
-import me.proton.core.drive.base.domain.extension.toResult
 import me.proton.core.drive.base.domain.provider.ConfigurationProvider
 import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.drivelink.domain.entity.DriveLink
 import me.proton.core.drive.feature.flag.domain.entity.FeatureFlagId.Companion.driveAndroidSDKUploadMain
 import me.proton.core.drive.feature.flag.domain.entity.FeatureFlagId.Companion.driveAndroidSDKUploadPhoto
-import me.proton.core.drive.feature.flag.domain.extension.on
-import me.proton.core.drive.feature.flag.domain.usecase.GetFeatureFlag
 import me.proton.core.drive.link.domain.entity.LinkId
-import me.proton.core.drive.link.domain.extension.userId
-import me.proton.core.drive.volume.domain.entity.Volume.Type
 import javax.inject.Inject
 
 class UseSdkForUpload @Inject constructor(
     private val configurationProvider: ConfigurationProvider,
-    private val getDriveLink: GetDriveLink,
-    private val getVolumeType: GetVolumeType,
-    private val getFeatureFlag: GetFeatureFlag,
+    private val checkSdkFeatureFlag: CheckSdkFeatureFlag,
 ) {
     suspend operator fun invoke(linkId: LinkId) = coRunCatching {
-        invoke(getDriveLink(linkId).toResult().getOrThrow()).getOrThrow()
+        configurationProvider.preferSdkForUpload && checkSdkFeatureFlag(
+            linkId = linkId,
+            main = ::driveAndroidSDKUploadMain,
+            photo = ::driveAndroidSDKUploadPhoto,
+        ).getOrThrow()
     }
 
     suspend operator fun invoke(driveLink: DriveLink) = coRunCatching {
-        configurationProvider.preferSdkForUpload && when (getVolumeType(driveLink).getOrThrow()) {
-            null, Type.UNKNOWN -> false
-            Type.REGULAR -> getFeatureFlag(driveAndroidSDKUploadMain(driveLink.userId)).on
-            Type.PHOTO -> getFeatureFlag(driveAndroidSDKUploadPhoto(driveLink.userId)).on
-        }
+        invoke(driveLink.id).getOrThrow()
     }
-
 }

@@ -65,6 +65,9 @@
   <string name="files_confirm_empty_trash_title">Ачысціць сметніцу?</string>
   <string name="files_confirm_empty_trash_message">Элементы ў сметніцы будуць незваротна выдалены. Вы не зможаце адрабіць гэта дзеянне.</string>
   <string name="files_confirm_empty_trash_confirm_action">Ачысціць сметніцу</string>
+  <string name="files_confirm_remove_all_offline_title">Выдаліць усе, якія даступны па-за сеткай?</string>
+  <string name="files_confirm_remove_all_offline_message">Файлы больш не будуць даступны па-за сеткай.</string>
+  <string name="files_confirm_remove_all_offline_confirm_action">Выдаліць усе</string>
   <string name="files_display_file_info_action">Падрабязнасці файла</string>
   <string name="files_display_folder_info_action">Падрабязнасці папкі</string>
 </resources>

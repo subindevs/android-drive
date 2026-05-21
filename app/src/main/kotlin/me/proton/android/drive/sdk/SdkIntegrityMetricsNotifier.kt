@@ -20,6 +20,8 @@ package me.proton.android.drive.sdk
 
 import me.proton.core.auth.domain.usecase.GetPrimaryUser
 import me.proton.core.domain.entity.UserId
+import me.proton.core.drive.base.domain.log.LogTag.DRIVE_SDK
+import me.proton.core.drive.base.domain.usecase.ReportError
 import me.proton.core.drive.observability.data.extension.toField
 import me.proton.core.drive.observability.data.extension.toVolumeType
 import me.proton.core.drive.observability.domain.constraint.CountConstraint
@@ -38,6 +40,7 @@ import me.proton.core.drive.observability.domain.usecase.EnqueueObservabilityEve
 import me.proton.core.drive.user.domain.extension.isWithoutProtonSubscription
 import me.proton.drive.sdk.telemetry.BlockVerificationErrorEvent
 import me.proton.drive.sdk.telemetry.DecryptionErrorEvent
+import me.proton.drive.sdk.telemetry.EncryptedField
 import me.proton.drive.sdk.telemetry.VerificationErrorEvent
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
@@ -47,6 +50,8 @@ class SdkIntegrityMetricsNotifier @Inject constructor(
     private val minimumIntervalConstraint: MinimumIntervalConstraint,
     private val countConstraint: CountConstraint,
     private val getPrimaryUser: GetPrimaryUser,
+    private val reportError: ReportError,
+    private val reportExtraInfo: ReportExtraInfo,
 ) {
 
     suspend operator fun invoke(
@@ -65,6 +70,14 @@ class SdkIntegrityMetricsNotifier @Inject constructor(
             notifyIntegrityErroringUsersTotalMetric(
                 volumeType = volumeType
             )
+            if (decryptionErrorEvent.field == EncryptedField.NODE_EXTENDED_ATTRIBUTES) {
+                reportExtraInfo(decryptionErrorEvent)
+            } else {
+                reportError(
+                    tag = DRIVE_SDK,
+                    message = "Decryption error: $decryptionErrorEvent",
+                )
+            }
         }
     }
 
@@ -127,18 +140,14 @@ class SdkIntegrityMetricsNotifier @Inject constructor(
         isFromBefore2024: Boolean?,
     ) {
         enqueueObservabilityEvent(
-            IntegrityDecryptionErrorsTotal(
+            observabilityData = IntegrityDecryptionErrorsTotal(
                 Labels = IntegrityDecryptionErrorsTotal.LabelsData(
                     volumeType = volumeType,
                     field = field,
-                    fromBefore2024 = if (isFromBefore2024 == null) {
-                        YesNoUnknown.unknown
-                    } else {
-                        if (isFromBefore2024) {
-                            YesNoUnknown.yes
-                        } else {
-                            if (isFromBefore2024) YesNoUnknown.yes else YesNoUnknown.no
-                        }
+                    fromBefore2024 = when (isFromBefore2024) {
+                        true -> YesNoUnknown.yes
+                        false ->  YesNoUnknown.no
+                        null -> YesNoUnknown.unknown
                     },
                 )
             ),
@@ -182,23 +191,15 @@ class SdkIntegrityMetricsNotifier @Inject constructor(
                 Labels = IntegrityVerificationErrorsTotal.LabelsData(
                     volumeType = volumeType,
                     field = field,
-                    addressMatchingDefaultShare = if (addressMatchingDefaultShare == null) {
-                        YesNoUnknown.unknown
-                    } else {
-                        if (addressMatchingDefaultShare) {
-                            YesNoUnknown.yes
-                        } else {
-                            YesNoUnknown.no
-                        }
+                    addressMatchingDefaultShare = when (addressMatchingDefaultShare) {
+                        true -> YesNoUnknown.yes
+                        false -> YesNoUnknown.no
+                        null -> YesNoUnknown.unknown
                     },
-                    fromBefore2024 = if (isFromBefore2024 == null) {
-                        YesNoUnknown.unknown
-                    } else {
-                        if (isFromBefore2024) {
-                            YesNoUnknown.yes
-                        } else {
-                            YesNoUnknown.no
-                        }
+                    fromBefore2024 = when (isFromBefore2024) {
+                        true -> YesNoUnknown.yes
+                        false -> YesNoUnknown.no
+                        null -> YesNoUnknown.unknown
                     },
                 )
             ),
@@ -248,7 +249,7 @@ class SdkIntegrityMetricsNotifier @Inject constructor(
             ),
             constraint = minimumIntervalConstraint(
                 userId = userId,
-                schemaId = DownloadErroringUsersTotal.SCHEMA_ID,
+                schemaId = IntegrityErroringUsersTotal.SCHEMA_ID,
                 interval = 5.minutes,
             )
         )

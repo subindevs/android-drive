@@ -37,6 +37,25 @@ suspend fun <T> pagedList(
     return items
 }
 
+suspend fun <T> pagedKeyList(
+    pageSize: Int,
+    page: suspend (last: T?, count: Int) -> List<T>
+): MutableList<T> {
+    require(pageSize > 0) {
+        "pageSize should be strictly positive"
+    }
+    val items = mutableListOf<T>()
+    var loaded: Int
+    var lastItem: T? = null
+    do {
+        val pageItems = page(lastItem, pageSize)
+        lastItem = pageItems.lastOrNull()
+        loaded = pageItems.size
+        items.addAll(pageItems)
+    } while (loaded == pageSize)
+    return items
+}
+
 suspend fun <T> processPagedList(
     pageSize: Int,
     page: suspend (fromIndex: Int, count: Int) -> List<T>,

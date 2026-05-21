@@ -71,8 +71,8 @@ interface PhotoRepository {
     suspend fun getPhotoListings(
         userId: UserId,
         volumeId: VolumeId,
-        fromIndex: Int,
         count: Int,
+        lastPhotoListing: PhotoListing?,
         sortingDirection: Direction = Direction.DESCENDING,
         tag: PhotoTag? = null,
     ): List<PhotoListing>
@@ -88,8 +88,8 @@ interface PhotoRepository {
     fun getPhotoListingsFlow(
         userId: UserId,
         volumeId: VolumeId,
-        fromIndex: Int,
         count: Int,
+        lastPhotoListing: PhotoListing?,
         sortingDirection: Direction = Direction.DESCENDING,
         tag: PhotoTag? = null,
     ): Flow<Result<List<PhotoListing>>>

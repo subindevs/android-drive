@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import me.proton.core.compose.theme.ProtonDimens.DefaultSpacing
@@ -44,7 +45,6 @@ import me.proton.core.compose.theme.ProtonTheme
 import me.proton.core.compose.theme.defaultNorm
 import me.proton.core.compose.theme.defaultSmallNorm
 import me.proton.core.drive.base.presentation.component.UserThumbnail
-import me.proton.core.drive.base.presentation.component.text.TextWithMiddleEllipsis
 import me.proton.core.drive.drivelink.shared.presentation.viewstate.ShareUserType
 import me.proton.core.drive.drivelink.shared.presentation.viewstate.ShareUserViewState
 import me.proton.core.drive.i18n.R as I18N
@@ -97,9 +97,10 @@ private fun ShareUser(
         UserThumbnail(firstLetter)
         Column(Modifier.weight(1F)) {
             if (displayName != null) {
-                TextWithMiddleEllipsis(
+                Text(
                     text = displayName,
                     maxLines = 1,
+                    overflow = TextOverflow.MiddleEllipsis,
                     style = ProtonTheme.typography.defaultNorm,
                 )
             }

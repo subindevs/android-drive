@@ -29,7 +29,9 @@
   <string name="common_type">種類</string>
   <string name="common_yes">はい</string>
   <string name="common_download">ダウンロード</string>
+  <string name="common_downloaded">ダウンロード済み</string>
   <string name="common_downloading">ダウンロード中</string>
+  <string name="common_waiting_for_download">ダウンロード待ち</string>
   <string name="common_link">リンク</string>
   <string name="common_password">パスワード</string>
   <string name="common_retry">再試行</string>
@@ -61,6 +63,7 @@
   <string name="common_delete_permanently_action">完全に削除</string>
   <string name="common_make_available_offline_action">オフラインで利用可能にする</string>
   <string name="common_remove_from_offline_available_action">オフラインから削除</string>
+  <string name="common_remove_all_from_offline_available_action">Remove all from offline available</string>
   <string name="common_get_link_action">リンクを作成</string>
   <string name="common_manage_link_action">リンクを管理</string>
   <string name="common_manage_access_action">アクセス管理</string>
@@ -79,6 +82,8 @@
   <string name="common_tag_photo_action">写真のタグをスキャン</string>
   <string name="common_save_as_action">として保存</string>
   <string name="common_open_action">開く</string>
+  <string name="common_back_action">Back</string>
+  <string name="common_open_side_menu_action">Open side menu</string>
   <!-- endregion -->
   <!-- region Common file types -->
   <string name="common_type_audio">音声</string>

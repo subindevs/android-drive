@@ -29,7 +29,9 @@
   <string name="common_type">Tipus</string>
   <string name="common_yes">Sí</string>
   <string name="common_download">Descarrega</string>
+  <string name="common_downloaded">Descarregat</string>
   <string name="common_downloading">S\'està descarregant</string>
+  <string name="common_waiting_for_download">S\'està esperant la descàrrega</string>
   <string name="common_link">Enllaç</string>
   <string name="common_password">Contrasenya</string>
   <string name="common_retry">Reintenta</string>
@@ -61,6 +63,7 @@
   <string name="common_delete_permanently_action">Elimina de manera permanent</string>
   <string name="common_make_available_offline_action">Posa a disposició fora de línia</string>
   <string name="common_remove_from_offline_available_action">Esborra del mode disposició fora de línia</string>
+  <string name="common_remove_all_from_offline_available_action">Esborreu-ho tot del contingut disponible fora de línia</string>
   <string name="common_get_link_action">Obtén l\'enllaç</string>
   <string name="common_manage_link_action">Gestiona l\'enllaç</string>
   <string name="common_manage_access_action">Gestionar l\'accés</string>
@@ -79,6 +82,8 @@
   <string name="common_tag_photo_action">Escanegeu la foto per etiquetes</string>
   <string name="common_save_as_action">Desa com</string>
   <string name="common_open_action">Obre</string>
+  <string name="common_back_action">Enrere</string>
+  <string name="common_open_side_menu_action">Obrir el menú lateral</string>
   <!-- endregion -->
   <!-- region Common file types -->
   <string name="common_type_audio">Àudio</string>

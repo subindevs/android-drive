@@ -39,6 +39,7 @@ import me.proton.core.drive.base.domain.extension.getOrNull
 import me.proton.core.drive.base.domain.extension.toResult
 import me.proton.core.drive.base.domain.log.LogTag
 import me.proton.core.drive.base.domain.usecase.BroadcastMessages
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.drivelink.crypto.domain.usecase.GetDecryptedDriveLink
 import me.proton.core.drive.drivelink.upload.data.usecase.CreateFolderTreeAndScheduleUpload
 import me.proton.core.drive.drivelink.upload.data.worker.WorkerKeys.KEY_FOLDER_ID
@@ -128,7 +129,7 @@ class UploadFolderWorker @AssistedInject constructor(
 
     override suspend fun getForegroundInfo(): ForegroundInfo = createForegroundInfo().getOrThrow()
 
-    private fun createForegroundInfo(): KotlinResult<ForegroundInfo> = runCatching {
+    private fun createForegroundInfo(): KotlinResult<ForegroundInfo> = coRunCatching {
         val transferNotification = transferDataNotification.getOrThrow()
         ForegroundInfo(
             transferNotification.first.id,

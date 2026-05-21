@@ -429,5 +429,15 @@ interface BackupDatabase : Database {
                 )
             }
         }
+
+        val MIGRATION_8 = object : DatabaseMigration {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(
+                    """
+                    CREATE INDEX IF NOT EXISTS `index_BackupFileEntity_user_id_state` ON `BackupFileEntity` (`user_id`, `state`)
+                    """.trimIndent()
+                )
+            }
+        }
     }
 }

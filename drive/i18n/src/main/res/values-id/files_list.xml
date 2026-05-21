@@ -62,6 +62,9 @@
   <string name="files_confirm_empty_trash_title">Kosongkan sampah?</string>
   <string name="files_confirm_empty_trash_message">Seluruh item pada sampah akan dihapus secara permanen. Tindakan ini tidak dapat diurungkan.</string>
   <string name="files_confirm_empty_trash_confirm_action">Kosongkan sampah</string>
+  <string name="files_confirm_remove_all_offline_title">Remove all from offline?</string>
+  <string name="files_confirm_remove_all_offline_message">Files will no longer be available offline.</string>
+  <string name="files_confirm_remove_all_offline_confirm_action">Remove all</string>
   <string name="files_display_file_info_action">Rincian berkas</string>
   <string name="files_display_folder_info_action">Rincian folder</string>
 </resources>

@@ -29,7 +29,9 @@
   <string name="common_type">Tyyppi</string>
   <string name="common_yes">Kyllä</string>
   <string name="common_download">Lataa</string>
+  <string name="common_downloaded">Ladatut</string>
   <string name="common_downloading">Ladataan</string>
+  <string name="common_waiting_for_download">Odottaa latausta</string>
   <string name="common_link">Linkki</string>
   <string name="common_password">Salasana</string>
   <string name="common_retry">Yritä uudelleen</string>
@@ -61,6 +63,7 @@
   <string name="common_delete_permanently_action">Poista pysyvästi</string>
   <string name="common_make_available_offline_action">Lataa käytettäväksi ilman yhteyttä</string>
   <string name="common_remove_from_offline_available_action">Poista ilman yhteyttä käytettävistä</string>
+  <string name="common_remove_all_from_offline_available_action">Poista kaikki offline-tilassa olevat</string>
   <string name="common_get_link_action">Hanki linkki</string>
   <string name="common_manage_link_action">Hallitse linkkiä</string>
   <string name="common_manage_access_action">Hallitse käyttöoikeuksia</string>
@@ -79,6 +82,8 @@
   <string name="common_tag_photo_action">Skannaa kuva tunnisteita varten</string>
   <string name="common_save_as_action">Tallenna nimellä</string>
   <string name="common_open_action">Avaa</string>
+  <string name="common_back_action">Takaisin</string>
+  <string name="common_open_side_menu_action">Avaa sivuvalikko</string>
   <!-- endregion -->
   <!-- region Common file types -->
   <string name="common_type_audio">Ääni</string>

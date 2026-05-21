@@ -22,6 +22,7 @@ import android.system.OsConstants
 import me.proton.android.drive.verifier.data.extension.log
 import me.proton.android.drive.verifier.domain.exception.VerifierException
 import me.proton.core.drive.announce.event.domain.entity.Event
+import me.proton.core.drive.base.data.entity.LoggerLevel
 import me.proton.core.drive.base.data.extension.isErrno
 import me.proton.core.drive.base.data.extension.isHttpError
 import me.proton.core.drive.base.data.extension.isRetryable
@@ -48,13 +49,17 @@ internal val Throwable.isRetryable: Boolean
         else -> isRetryable
     }
 
-internal fun Throwable.log(tag: String, message: String? = null): Throwable = this.also {
+internal fun Throwable.log(
+    tag: String,
+    message: String? = null,
+    level: LoggerLevel? = null,
+): Throwable = this.also {
     when (this) {
         is VerifierException -> this.log(tag, message.orEmpty())
         is InconsistencyException -> this.log(tag, message.orEmpty())
         is NotEnoughSpaceException -> this.log(tag, message.orEmpty())
         is UploadNotFoundException -> this.log(tag, message.orEmpty())
-        else -> this.baseLog(tag, message)
+        else -> this.baseLog(tag, message, level)
     }
 }
 

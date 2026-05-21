@@ -21,7 +21,7 @@ package me.proton.android.drive.ui.screen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import me.proton.android.drive.ui.viewmodel.DefaultHomeTabViewModel
 import me.proton.core.drive.settings.presentation.component.DefaultHomeTab
 import me.proton.core.drive.i18n.R as I18N

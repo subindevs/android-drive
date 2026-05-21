@@ -445,7 +445,7 @@ abstract class DriveDatabase :
     DocumentScannerDatabase {
 
     companion object {
-        const val VERSION = 104
+        const val VERSION = 105
 
         private val migrations = listOf(
             DriveDatabaseMigrations.MIGRATION_1_2,
@@ -551,6 +551,7 @@ abstract class DriveDatabase :
             DriveDatabaseMigrations.MIGRATION_101_102,
             DriveDatabaseMigrations.MIGRATION_102_103,
             DriveDatabaseMigrations.MIGRATION_103_104,
+            DriveDatabaseMigrations.MIGRATION_104_105,
         )
 
         fun buildDatabase(context: Context): DriveDatabase =

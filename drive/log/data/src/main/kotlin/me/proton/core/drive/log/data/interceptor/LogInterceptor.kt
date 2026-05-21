@@ -27,6 +27,7 @@ import me.proton.core.drive.base.domain.entity.TimestampMs
 import me.proton.core.drive.base.domain.extension.MiB
 import me.proton.core.drive.base.domain.extension.getOrNull
 import me.proton.core.drive.base.domain.log.LogTag
+import me.proton.core.drive.base.domain.util.coRunCatching
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
@@ -40,7 +41,7 @@ class LogInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val requestOccurredAt = TimestampMs()
-        val response = runCatching { chain.proceed(request) }
+        val response = coRunCatching { chain.proceed(request) }
             .onFailure { error ->
                 error.log(
                     tag = LogTag.LOG,
@@ -50,7 +51,7 @@ class LogInterceptor : Interceptor {
             }
             .getOrThrow()
         val responseOccurredAt = TimestampMs()
-        runCatching {
+        coRunCatching {
             announceEvent(
                 networkEvent(
                     request = request,
@@ -82,7 +83,7 @@ class LogInterceptor : Interceptor {
             occurredAt = responseOccurredAt,
             code = response.code,
             message = response.message,
-            jsonBody = runCatching {
+            jsonBody = coRunCatching {
                 // Avoid Socket is closed error (SocketException)
                 response.peekBody(byteCount = MAX_BYTE_COUNT.value).jsonString
             }.getOrNull(LogTag.LOG, "Cannot read body"),
@@ -102,7 +103,7 @@ class LogInterceptor : Interceptor {
             other = contentType()?.toString(),
             ignoreCase = true,
         )
-    }?.let { runCatching { string() }.getOrNull() }
+    }?.let { coRunCatching { string() }.getOrNull() }
 
     private val Response.source: Event.Network.Source get() = when {
         networkResponse != null -> Event.Network.Source.Network

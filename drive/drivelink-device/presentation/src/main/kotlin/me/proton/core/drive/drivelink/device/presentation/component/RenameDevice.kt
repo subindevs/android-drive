@@ -19,7 +19,7 @@
 package me.proton.core.drive.drivelink.device.presentation.component
 
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import me.proton.core.drive.drivelink.device.presentation.viewmodel.RenameDeviceViewModel
 import me.proton.core.drive.drivelink.rename.presentation.Rename
 

@@ -63,6 +63,9 @@
   <string name="files_confirm_empty_trash_title">Vuoi svuotare il cestino?</string>
   <string name="files_confirm_empty_trash_message">Gli elementi nel cestino verranno eliminati definitivamente. Non puoi annullare questa azione.</string>
   <string name="files_confirm_empty_trash_confirm_action">Svuota il cestino</string>
+  <string name="files_confirm_remove_all_offline_title">Rimuovere tutto dalla modalità offline?</string>
+  <string name="files_confirm_remove_all_offline_message">I file non saranno più disponibili offline.</string>
+  <string name="files_confirm_remove_all_offline_confirm_action">Rimuovi tutto</string>
   <string name="files_display_file_info_action">Dettagli del file</string>
   <string name="files_display_folder_info_action">Dettagli della cartella</string>
 </resources>

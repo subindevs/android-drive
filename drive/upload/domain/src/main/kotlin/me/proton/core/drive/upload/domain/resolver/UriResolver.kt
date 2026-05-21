@@ -32,6 +32,7 @@ interface UriResolver {
     suspend fun getLastModified(uriString: String): TimestampMs?
     suspend fun getUriInfo(uriString: String): UriInfo?
     suspend fun getParentName(uriString: String): String?
+    suspend fun release(uriString: String) { /* do nothing */ }
 
     data class UriInfo(
         val name: String?,

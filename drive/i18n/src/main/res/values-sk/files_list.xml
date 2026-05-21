@@ -65,6 +65,9 @@
   <string name="files_confirm_empty_trash_title">Vyprázdniť kôš?</string>
   <string name="files_confirm_empty_trash_message">Položky v koši budú permanentne zmazané. Túto akciu nemožno vrátiť.</string>
   <string name="files_confirm_empty_trash_confirm_action">Vyprázdniť kôš</string>
+  <string name="files_confirm_remove_all_offline_title">Odstrániť všetko z offline?</string>
+  <string name="files_confirm_remove_all_offline_message">Súbory už nebudú offline dostupné.</string>
+  <string name="files_confirm_remove_all_offline_confirm_action">Odstrániť všetko</string>
   <string name="files_display_file_info_action">Podrobnosti súboru</string>
   <string name="files_display_folder_info_action">Podrobnosti priečinka</string>
 </resources>

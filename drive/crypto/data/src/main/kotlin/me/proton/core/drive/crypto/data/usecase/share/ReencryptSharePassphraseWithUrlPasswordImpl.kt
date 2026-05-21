@@ -20,6 +20,7 @@ package me.proton.core.drive.crypto.data.usecase.share
 import android.util.Base64
 import me.proton.core.crypto.common.pgp.Armored
 import me.proton.core.crypto.common.pgp.KeyPacket
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.crypto.domain.entity.ReencryptedSharePassphrase
 import me.proton.core.drive.crypto.domain.usecase.share.ReencryptSharePassphraseWithUrlPassword
 import me.proton.core.drive.cryptobase.domain.usecase.EncryptSessionKey
@@ -38,7 +39,7 @@ class ReencryptSharePassphraseWithUrlPasswordImpl @Inject constructor(
         decryptKey: KeyHolder,
         urlPassword: ByteArray,
         sharePassphrase: Armored,
-    ): Result<ReencryptedSharePassphrase> = runCatching {
+    ): Result<ReencryptedSharePassphrase> = coRunCatching {
         val sessionKey = getSessionKeyFromEncryptedMessage(
             decryptKey = decryptKey,
             message = sharePassphrase,

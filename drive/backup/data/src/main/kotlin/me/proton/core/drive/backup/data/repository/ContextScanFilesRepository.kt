@@ -46,14 +46,14 @@ class ContextScanFilesRepository @Inject constructor(
         uris: List<Uri>,
     ): Result<List<ScanResult>> = coRunCatching(Dispatchers.IO) {
         uris.map { uri ->
-            runCatching {
+            coRunCatching {
                 context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
                     if (cursor.moveToFirst()) {
                         val dateAdded = cursor.getColumnIndex(MediaStore.MediaColumns.DATE_ADDED)
                             .takeIf { columnIndex ->
                                 columnIndex != -1
                             }?.let { columnIndex ->
-                                cursor.getInt(columnIndex).toLong()
+                                cursor.getLong(columnIndex)
                             }
                         val bucketId = cursor.getColumnIndex(MediaStore.MediaColumns.BUCKET_ID)
                             .takeIf { columnIndex ->

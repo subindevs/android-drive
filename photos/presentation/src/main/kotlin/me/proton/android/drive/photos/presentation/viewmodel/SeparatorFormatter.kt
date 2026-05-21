@@ -26,6 +26,7 @@ import kotlinx.coroutines.sync.withLock
 import me.proton.core.drive.base.data.extension.log
 import me.proton.core.drive.base.domain.entity.TimestampS
 import me.proton.core.drive.base.domain.log.LogTag
+import me.proton.core.drive.base.domain.util.coRunCatching
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -83,7 +84,7 @@ class SeparatorFormatter constructor(
         calendar: Calendar,
         timestampS: TimestampS,
         coercedTimestampS: Long,
-    ) = runCatching {
+    ) = coRunCatching {
         format(calendar.time)
     }.onFailure { error ->
         error.log(

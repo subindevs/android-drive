@@ -38,7 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -74,6 +74,7 @@ import me.proton.android.drive.ui.dialog.ComputerOptions
 import me.proton.android.drive.ui.dialog.ConfirmDeleteAlbumDialog
 import me.proton.android.drive.ui.dialog.ConfirmDeletionDialog
 import me.proton.android.drive.ui.dialog.ConfirmEmptyTrashDialog
+import me.proton.android.drive.ui.dialog.ConfirmRemoveAllOfflineDialog
 import me.proton.android.drive.ui.dialog.ConfirmLeaveAlbumDialog
 import me.proton.android.drive.ui.dialog.ConfirmSkipIssuesDialog
 import me.proton.android.drive.ui.dialog.ConfirmStopAllSharingDialog
@@ -136,6 +137,7 @@ import me.proton.core.crypto.common.keystore.KeyStoreCrypto
 import me.proton.core.domain.entity.UserId
 import me.proton.core.drive.announce.event.domain.entity.Event
 import me.proton.core.drive.announce.event.domain.usecase.AnnounceEvent
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.device.domain.entity.DeviceId
 import me.proton.core.drive.drivelink.device.presentation.component.RenameDevice
 import me.proton.core.drive.drivelink.rename.presentation.Rename
@@ -354,6 +356,7 @@ fun AppNavGraph(
         addConfirmStopLinkSharingDialog(navController)
         addConfirmStopAllSharingDialog(navController)
         addConfirmEmptyTrashDialog(navController)
+        addConfirmRemoveAllOfflineDialog(navController)
         addTrash(navController)
         addOffline(navController)
         addPagerPreview(navController)
@@ -878,6 +881,23 @@ fun NavGraphBuilder.addConfirmStopAllSharingDialog(navController: NavHostControl
     ConfirmStopAllSharingDialog(
         onDismiss = onDismiss,
         onConfirm = onConfirm,
+    )
+}
+
+@ExperimentalCoroutinesApi
+fun NavGraphBuilder.addConfirmRemoveAllOfflineDialog(navController: NavHostController) = dialog(
+    route = Screen.OfflineFiles.Dialogs.ConfirmRemoveAllOffline.route,
+    arguments = listOf(
+        navArgument(Screen.Files.USER_ID) { type = NavType.StringType },
+    ),
+) {
+    ConfirmRemoveAllOfflineDialog(
+        onDismiss = {
+            navController.popBackStack(
+                route = Screen.OfflineFiles.Dialogs.ConfirmRemoveAllOffline.route,
+                inclusive = true,
+            )
+        }
     )
 }
 
@@ -1451,6 +1471,11 @@ fun NavGraphBuilder.addOffline(navController: NavHostController) = composable(
         navigateToAlbumOptions = { albumId ->
             navController.navigate(
                 Screen.AlbumOptions(userId, albumId)
+            )
+        },
+        navigateToConfirmRemoveAllOffline = {
+            navController.navigate(
+                Screen.OfflineFiles.Dialogs.ConfirmRemoveAllOffline(userId)
             )
         },
     )
@@ -2236,7 +2261,7 @@ fun NavGraphBuilder.addProtonDocsInsertImageOptions(
     ),
 ) { _, _ ->
     val viewModel = navController.previousBackStackEntry?.let { prevNavBackStackEntry ->
-        runCatching { hiltViewModel<PreviewViewModel>(prevNavBackStackEntry) }.getOrNull()
+        coRunCatching { hiltViewModel<PreviewViewModel>(prevNavBackStackEntry) }.getOrNull()
     }
     ProtonDocsInsertImageOptions(
         saveResult = { uris ->

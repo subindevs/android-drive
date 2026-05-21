@@ -27,6 +27,7 @@ import me.proton.core.drive.file.base.domain.entity.ThumbnailType
 import me.proton.core.drive.file.base.domain.extension.getThumbnailId
 import me.proton.core.drive.file.base.domain.extension.getThumbnailIds
 import me.proton.core.drive.link.domain.entity.Link
+import me.proton.core.drive.link.domain.extension.decryptedFileName
 import me.proton.core.drive.link.domain.extension.hasShareLink
 import me.proton.core.drive.link.domain.extension.isPhoto
 import me.proton.core.drive.link.domain.extension.isSharedByLinkOrWithUsers
@@ -80,7 +81,7 @@ fun DriveLink.File.toVolumePhotoListing(): PhotoListing.Volume =
         }
 
 val DriveLink.File.decryptedFileName: String
-    get() = id.id
+    get() = id.decryptedFileName
 
 val List<DriveLink>.lowestCommonPermissions: Permissions get() =
     minOfOrNull { driveLink -> driveLink.sharePermissions?.value ?: Permissions.owner.value }

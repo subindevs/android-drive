@@ -21,12 +21,13 @@ import android.app.ActivityManager
 import me.proton.core.drive.base.domain.entity.MemoryInfo
 import me.proton.core.drive.base.domain.extension.bytes
 import me.proton.core.drive.base.domain.usecase.GetMemoryInfo
+import me.proton.core.drive.base.domain.util.coRunCatching
 import javax.inject.Inject
 
 class GetMemoryInfoImpl @Inject constructor(
     private val activityManager: ActivityManager,
 ) : GetMemoryInfo {
-    override operator fun invoke(): Result<MemoryInfo> = runCatching {
+    override operator fun invoke(): Result<MemoryInfo> = coRunCatching {
         with(
             ActivityManager.MemoryInfo().also { memoryInfo ->
                 activityManager.getMemoryInfo(memoryInfo)

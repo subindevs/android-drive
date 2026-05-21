@@ -35,6 +35,7 @@ import androidx.navigation.Navigator
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.DialogNavigator
 import me.proton.core.crypto.common.keystore.KeyStoreCrypto
+import me.proton.core.drive.base.domain.util.coRunCatching
 
 @ExperimentalAnimationApi
 @Composable
@@ -90,7 +91,7 @@ internal fun KeyStoreCrypto.encrypt(bundle: Bundle?) = Bundle().apply {
     val parcel = Parcel.obtain()
     bundle.writeToParcel(parcel, 0)
     val base64 = String(Base64.encode(parcel.marshall(), Base64.NO_WRAP))
-    val (key, value) = runCatching {
+    val (key, value) = coRunCatching {
         PROTON_NAV_ENCRYPTED_KEY to encrypt(base64)
     }.getOrNull() ?: (PROTON_NAV_BASE_64_KEY to base64)
     putString(key, value)

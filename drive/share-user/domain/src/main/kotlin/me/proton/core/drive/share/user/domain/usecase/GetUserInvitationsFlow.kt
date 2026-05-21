@@ -30,6 +30,7 @@ import me.proton.core.drive.base.domain.extension.flowOf
 import me.proton.core.drive.base.domain.log.LogTag.SHARING
 import me.proton.core.drive.base.domain.provider.ConfigurationProvider
 import me.proton.core.drive.base.domain.repository.fetcher
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.share.user.domain.entity.UserInvitation
 import me.proton.core.drive.share.user.domain.entity.ShareTargetType.Folder
 import me.proton.core.drive.share.user.domain.entity.ShareTargetType.File
@@ -71,7 +72,7 @@ class GetUserInvitationsFlow @Inject constructor(
                 userInvitations.filter { userInvitation -> userInvitation.details == null }
                     .map { userInvitation -> userInvitation.id }
                     .onEach { id ->
-                        runCatching {
+                        coRunCatching {
                             repository.fetchAndStoreInvitation(userId, id.invitationId)
                         }.onFailure { error ->
                             CoreLogger.w(

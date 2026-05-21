@@ -117,7 +117,7 @@ class CreateShareInvitationRequest @Inject constructor(
         ).getOrThrow()
 
         return ShareInvitationRequest.Internal(
-            inviterEmail = getUserEmail(shareId.userId, contextAddressId),
+            inviterEmail = getUserEmail(shareId.userId, contextAddressId).getOrThrow(),
             inviteeEmail = inviteeEmail,
             permissions = permissions,
             keyPacket = Base64.encodeToString(encryptedKeyPacket, Base64.NO_WRAP),

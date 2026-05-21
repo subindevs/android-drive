@@ -104,6 +104,7 @@ import me.proton.core.drive.base.domain.log.LogTag.VIEW_MODEL
 import me.proton.core.drive.base.domain.log.logId
 import me.proton.core.drive.base.domain.provider.ConfigurationProvider
 import me.proton.core.drive.base.domain.usecase.BroadcastMessages
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.base.presentation.common.Action
 import me.proton.core.drive.base.presentation.common.getThemeDrawableId
 import me.proton.core.drive.base.presentation.effect.ListEffect
@@ -859,7 +860,7 @@ class PhotosViewModel @Inject constructor(
         anchorsInLabel: Int,
     ): List<FastScrollAnchor> = fastScrollAnchors.getOrPut(items.itemsHash to anchors) {
         items.getFastScrollAnchors(anchors, anchorsInLabel) { captureTime ->
-            runCatching { fastScrollLabelFormatter.toSeparator(captureTime) }
+            coRunCatching { fastScrollLabelFormatter.toSeparator(captureTime) }
                 .getOrNull(
                     tag = VIEW_MODEL,
                     message = "Failed to format label for separator from capture time (sec): ${captureTime.value}",

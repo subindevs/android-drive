@@ -66,8 +66,8 @@ class GetSessionForkProtonDocumentUriStringImpl @Inject constructor(
     private suspend fun DriveLink.getEmail() = getShare(shareId).toResult().getOrThrow()
         .addressId
         ?.let { addressId ->
-            getUserEmail(userId, addressId)
-        } ?: getUserEmail(userId)
+            getUserEmail(userId, addressId).getOrThrow()
+        } ?: getUserEmail(userId).getOrThrow()
 
     companion object {
         private const val PROTON_DOCS_CHILD_CLIENT_ID = "web-docs"

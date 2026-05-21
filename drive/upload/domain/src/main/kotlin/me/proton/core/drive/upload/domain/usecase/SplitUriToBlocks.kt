@@ -40,6 +40,7 @@ import me.proton.core.drive.upload.domain.outputstream.MultipleFileOutputStream
 import me.proton.core.drive.upload.domain.resolver.UriResolver
 import me.proton.core.util.kotlin.takeIfNotEmpty
 import java.io.File
+import java.io.InputStream
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.cancellation.CancellationException
@@ -97,7 +98,7 @@ class SplitUriToBlocks @Inject constructor(
             val (digestsInputStream, messageDigests) = inputStream.injectMessageDigests(
                 algorithms = configurationProvider.digestAlgorithms,
             )
-            digestsInputStream.skip(splitRawBlocks.totalLength())
+            digestsInputStream.skipByReading(splitRawBlocks.totalLength())
             val listener = MultipleFileOutputStreamListener(isCancelled)
             val files = try {
                 digestsInputStream.saveToBlocks(
@@ -120,6 +121,16 @@ class SplitUriToBlocks @Inject constructor(
                 }.let(::UploadDigests)
             files to uploadDigests
         } ?: (emptyList<File>() to UploadDigests())
+
+    private fun InputStream.skipByReading(length: Long) {
+        val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+        var remaining = length
+        while (remaining > 0) {
+            val read = read(buffer, 0, minOf(remaining, buffer.size.toLong()).toInt())
+            if (read == -1) break
+            remaining -= read
+        }
+    }
 
     private fun List<File>.totalLength(): Long =
         takeIfNotEmpty()

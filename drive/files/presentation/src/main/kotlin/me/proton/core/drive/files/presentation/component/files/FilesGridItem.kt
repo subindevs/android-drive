@@ -41,6 +41,7 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -56,6 +57,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
@@ -71,7 +73,6 @@ import me.proton.core.drive.base.domain.entity.Percentage
 import me.proton.core.drive.base.presentation.component.CircleSelection
 import me.proton.core.drive.base.presentation.component.EncryptedItem
 import me.proton.core.drive.base.presentation.component.LinearProgressIndicator
-import me.proton.core.drive.base.presentation.component.text.TextWithMiddleEllipsis
 import me.proton.core.drive.drivelink.domain.entity.DriveLink
 import me.proton.core.drive.drivelink.domain.extension.isNameEncrypted
 import me.proton.core.drive.files.presentation.component.FilesTestTag
@@ -192,10 +193,11 @@ fun GridDetailsTitle(
         if (isEncrypted) {
             EncryptedItem()
         } else {
-            TextWithMiddleEllipsis(
+            Text(
                 text = title,
                 style = ProtonTheme.typography.defaultSmall(enabled = isEnabled),
                 maxLines = 1,
+                overflow = TextOverflow.MiddleEllipsis,
             )
         }
     }

@@ -63,6 +63,7 @@
     <string name="common_delete_permanently_action">Delete permanently</string>
     <string name="common_make_available_offline_action">Make available offline</string>
     <string name="common_remove_from_offline_available_action">Remove from offline available</string>
+    <string name="common_remove_all_from_offline_available_action">Remove all from offline available</string>
     <string name="common_get_link_action">Get link</string>
     <string name="common_manage_link_action">Manage link</string>
     <string name="common_manage_access_action">Manage access</string>

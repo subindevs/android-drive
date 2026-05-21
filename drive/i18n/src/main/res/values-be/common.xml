@@ -29,7 +29,9 @@
   <string name="common_type">Тып</string>
   <string name="common_yes">Так</string>
   <string name="common_download">Спампаваць</string>
+  <string name="common_downloaded">Спампавана</string>
   <string name="common_downloading">Спампоўванне</string>
+  <string name="common_waiting_for_download">Чаканне спампоўкі</string>
   <string name="common_link">Спасылка</string>
   <string name="common_password">Пароль</string>
   <string name="common_retry">Паўтарыць</string>
@@ -61,6 +63,7 @@
   <string name="common_delete_permanently_action">Выдаліць незваротна</string>
   <string name="common_make_available_offline_action">Зрабіць даступным па-за сеткай</string>
   <string name="common_remove_from_offline_available_action">Выключыць пазасеткавы доступ</string>
+  <string name="common_remove_all_from_offline_available_action">Выдаліць усе, якія даступны па-за сеткай</string>
   <string name="common_get_link_action">Атрымаць спасылку</string>
   <string name="common_manage_link_action">Кіраванне спасылкай</string>
   <string name="common_manage_access_action">Кіраваць доступам</string>
@@ -79,6 +82,8 @@
   <string name="common_tag_photo_action">Сканіраваць фатаграфію для тэгаў</string>
   <string name="common_save_as_action">Захаваць як</string>
   <string name="common_open_action">Адкрыць</string>
+  <string name="common_back_action">Назад</string>
+  <string name="common_open_side_menu_action">Адкрыць бакавое меню</string>
   <!-- endregion -->
   <!-- region Common file types -->
   <string name="common_type_audio">Аўдыя</string>

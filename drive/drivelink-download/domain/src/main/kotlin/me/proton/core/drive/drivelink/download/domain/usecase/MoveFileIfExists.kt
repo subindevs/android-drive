@@ -23,12 +23,13 @@ import me.proton.core.drive.base.domain.usecase.GetCacheFolder
 import me.proton.core.drive.base.domain.usecase.GetPermanentFolder
 import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.drivelink.domain.entity.DriveLink
-import me.proton.core.drive.drivelink.domain.extension.decryptedFileName
 import me.proton.core.drive.drivelink.domain.usecase.GetDriveLink
 import me.proton.core.drive.file.base.domain.extension.moveTo
 import me.proton.core.drive.link.domain.entity.FileId
+import me.proton.core.drive.link.domain.extension.decryptedFileName
 import me.proton.core.drive.link.domain.extension.userId
 import me.proton.core.drive.linkoffline.domain.usecase.IsLinkOrAnyAncestorMarkedAsOffline
+import me.proton.core.drive.volume.domain.entity.VolumeId
 import java.io.File
 import javax.inject.Inject
 
@@ -43,13 +44,19 @@ class MoveFileIfExists @Inject constructor(
     }
 
     suspend operator fun invoke(driveLink: DriveLink.File): Result<File> = coRunCatching {
-        val userId = driveLink.userId
-        val volumeId = driveLink.volumeId
-        val fileId = driveLink.id
-        val cacheFolder = getCacheFolder(userId, volumeId.id, driveLink.activeRevisionId)
-        val permanentFolder = getPermanentFolder(userId, volumeId.id, driveLink.activeRevisionId)
-        val cacheFile = File(cacheFolder, driveLink.decryptedFileName)
-        val permanentFile = File(permanentFolder, driveLink.decryptedFileName)
+        invoke(driveLink.volumeId, driveLink.id, driveLink.activeRevisionId).getOrThrow()
+    }
+
+    suspend operator fun invoke(
+        volumeId: VolumeId,
+        fileId: FileId,
+        revisionId: String,
+    ): Result<File> = coRunCatching {
+        val userId = fileId.userId
+        val cacheFolder = getCacheFolder(userId, volumeId.id, revisionId)
+        val permanentFolder = getPermanentFolder(userId, volumeId.id, revisionId)
+        val cacheFile = File(cacheFolder, fileId.decryptedFileName)
+        val permanentFile = File(permanentFolder, fileId.decryptedFileName)
 
         val markedAsOffline = isLinkOrAnyAncestorMarkedAsOffline(fileId)
         if (markedAsOffline) {

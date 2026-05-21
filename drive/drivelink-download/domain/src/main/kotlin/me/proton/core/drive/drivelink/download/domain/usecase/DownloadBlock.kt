@@ -67,7 +67,7 @@ class DownloadBlock @Inject constructor(
             accumulator.second to value
         }.drop(1)
             .onEach { (prev, next) ->
-                downloadSpeedManager.add(userId, next - prev)
+                downloadSpeedManager.add(userId, usedSdk = false, next - prev)
             }.launchIn(scope)
         downloadUrl(
             userId = userId,

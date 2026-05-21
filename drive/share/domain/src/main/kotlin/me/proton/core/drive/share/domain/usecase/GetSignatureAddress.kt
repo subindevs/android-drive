@@ -38,7 +38,7 @@ class GetSignatureAddress @Inject constructor(
                 getSignatureAddress(
                     userId = shareId.userId,
                     addressId = addressId,
-                )
-            } ?: getSignatureAddress(shareId.userId)
+                ).getOrThrow()
+            } ?: getSignatureAddress(shareId.userId).getOrThrow()
     }
 }

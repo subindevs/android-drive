@@ -62,6 +62,9 @@
   <string name="files_confirm_empty_trash_title">清空回收站?</string>
   <string name="files_confirm_empty_trash_message">回收站中的项目将被永久删除。您无法撤销此操作。</string>
   <string name="files_confirm_empty_trash_confirm_action">清空回收站</string>
+  <string name="files_confirm_remove_all_offline_title">全部移出离线？</string>
+  <string name="files_confirm_remove_all_offline_message">文件将不再离线可用！</string>
+  <string name="files_confirm_remove_all_offline_confirm_action">全部移出</string>
   <string name="files_display_file_info_action">文件详情</string>
   <string name="files_display_folder_info_action">文件夹详情</string>
 </resources>

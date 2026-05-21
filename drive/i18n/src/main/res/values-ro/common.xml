@@ -29,7 +29,9 @@
   <string name="common_type">Tip</string>
   <string name="common_yes">Da</string>
   <string name="common_download">Descărcare</string>
+  <string name="common_downloaded">Descărcat</string>
   <string name="common_downloading">Se descarcă</string>
+  <string name="common_waiting_for_download">Așteptare pentru descărcare</string>
   <string name="common_link">Legătura</string>
   <string name="common_password">Parola</string>
   <string name="common_retry">Reîncercare</string>
@@ -61,6 +63,7 @@
   <string name="common_delete_permanently_action">Ștergere permanentă</string>
   <string name="common_make_available_offline_action">Disponibil fără conexiune</string>
   <string name="common_remove_from_offline_available_action">Eliminare din disponibile fără conexiune</string>
+  <string name="common_remove_all_from_offline_available_action">Eliminare toate din disponibile fără conexiune</string>
   <string name="common_get_link_action">Obținere legătură web</string>
   <string name="common_manage_link_action">Gestionare legătură web</string>
   <string name="common_manage_access_action">Gestionare acces</string>
@@ -79,6 +82,8 @@
   <string name="common_tag_photo_action">Scanare foto pentru etichete</string>
   <string name="common_save_as_action">Salvare ca</string>
   <string name="common_open_action">Deschidere</string>
+  <string name="common_back_action">Înapoi</string>
+  <string name="common_open_side_menu_action">Deschidere meniu lateral</string>
   <!-- endregion -->
   <!-- region Common file types -->
   <string name="common_type_audio">Audio</string>

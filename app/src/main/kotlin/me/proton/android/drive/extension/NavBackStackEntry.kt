@@ -27,6 +27,7 @@ import me.proton.android.drive.ui.handler.FolderCreatedHandler
 import me.proton.android.drive.ui.viewmodel.FilesViewModel
 import me.proton.android.drive.ui.viewmodel.MoveToFolderViewModel
 import me.proton.android.drive.ui.viewmodel.UploadToViewModel
+import me.proton.core.drive.base.domain.util.coRunCatching
 import java.io.Serializable
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -36,7 +37,7 @@ val NavBackStackEntry.folderCreatedHandler: FolderCreatedHandler?
         MoveToFolderViewModel::class.java,
         UploadToViewModel::class.java,
     ).firstNotNullOfOrNull { vmClass ->
-        runCatching {
+        coRunCatching {
             ViewModelProvider(this, defaultViewModelProviderFactory)[vmClass] as? FolderCreatedHandler
         }.getOrNull()
     }

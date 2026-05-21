@@ -31,6 +31,7 @@ import me.proton.core.drive.announce.event.domain.entity.Event
 import me.proton.core.drive.base.data.entity.LoggerLevel.WARNING
 import me.proton.core.drive.base.data.extension.log
 import me.proton.core.drive.base.domain.log.LogTag
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.notification.data.extension.buildNotificationChannelCompat
 import me.proton.core.drive.notification.data.extension.id
 import me.proton.core.drive.notification.data.provider.NotificationBuilderProvider
@@ -96,7 +97,7 @@ class NotificationManagerImpl @Inject constructor(
     override fun hasValidChannel(notificationId: NotificationId): Boolean =
         notificationManagerCompat.getNotificationChannel(notificationId.channel.id) != null
 
-    private fun deleteNotificationChannel(channelId: String) = runCatching {
+    private fun deleteNotificationChannel(channelId: String) = coRunCatching {
         notificationManagerCompat.deleteNotificationChannel(channelId)
     }
         .recoverCatching { error ->
@@ -112,7 +113,7 @@ class NotificationManagerImpl @Inject constructor(
         }
         .getOrThrow()
 
-    private fun deleteNotificationChannelGroup(userId: UserId) = runCatching {
+    private fun deleteNotificationChannelGroup(userId: UserId) = coRunCatching {
         notificationManagerCompat.deleteNotificationChannelGroup(userId.id)
     }
         .recoverCatching { error ->

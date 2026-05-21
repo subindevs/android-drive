@@ -57,6 +57,7 @@ import me.proton.core.drive.base.domain.entity.Percentage
 import me.proton.core.drive.base.domain.extension.getOrNull
 import me.proton.core.drive.base.domain.log.LogTag
 import me.proton.core.drive.base.domain.provider.ConfigurationProvider
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.linkupload.domain.entity.UploadFileLink
 import me.proton.core.drive.linkupload.domain.entity.UploadState
 import me.proton.core.drive.linkupload.domain.repository.LinkUploadRepository
@@ -182,7 +183,7 @@ class UploadEventWorker @AssistedInject constructor(
         return createForegroundInfo().getOrThrow()
     }
 
-    private fun createForegroundInfo(): kotlin.Result<ForegroundInfo> = runCatching {
+    private fun createForegroundInfo(): kotlin.Result<ForegroundInfo> = coRunCatching {
         val transferNotification = transferDataNotification.getOrThrow()
         ForegroundInfo(
             transferNotification.first.id,

@@ -23,15 +23,18 @@ import me.proton.core.drive.base.domain.entity.Percentage
 import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.linkupload.domain.entity.UploadFileLink
 import me.proton.core.drive.upload.domain.manager.UploadSdkManager
+import me.proton.core.drive.upload.domain.resolver.UriResolver
 import javax.inject.Inject
 
 class RemoveUploadFileAndAnnounceCancelled @Inject constructor(
     private val removeUploadFile: RemoveUploadFile,
     private val announceUploadEvent: AnnounceUploadEvent,
     private val uploadSdkManager: UploadSdkManager,
+    private val uriResolver: UriResolver,
 ) {
     suspend operator fun invoke(uploadFileLink: UploadFileLink) = coRunCatching {
         uploadSdkManager.cancel(uploadFileLink)
+        uploadFileLink.uriString?.let { uriResolver.release(it) }
         removeUploadFile(uploadFileLink).getOrThrow()
         announceUploadEvent(
             uploadFileLink = uploadFileLink,

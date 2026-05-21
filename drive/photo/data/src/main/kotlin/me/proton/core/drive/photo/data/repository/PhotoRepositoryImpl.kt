@@ -19,18 +19,12 @@
 package me.proton.core.drive.photo.data.repository
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.transform
 import me.proton.core.domain.entity.UserId
 import me.proton.core.drive.base.domain.entity.ClientUid
 import me.proton.core.drive.base.domain.entity.SaveAction
 import me.proton.core.drive.base.domain.entity.TimestampS
 import me.proton.core.drive.base.domain.util.coRunCatching
-import me.proton.core.drive.feature.flag.domain.entity.FeatureFlagId.Companion.driveAndroidPhotoListingWithFileProperties
-import me.proton.core.drive.feature.flag.domain.extension.on
-import me.proton.core.drive.feature.flag.domain.usecase.GetFeatureFlag
-import me.proton.core.drive.feature.flag.domain.usecase.GetFeatureFlagFlow
 import me.proton.core.drive.link.domain.entity.FileId
 import me.proton.core.drive.link.domain.entity.LinkId
 import me.proton.core.drive.link.domain.entity.ParentId
@@ -60,8 +54,6 @@ import javax.inject.Inject
 class PhotoRepositoryImpl @Inject constructor(
     private val api: PhotoApiDataSource,
     private val db: PhotoDatabase,
-    private val getFeatureFlag: GetFeatureFlag,
-    private val getFeatureFlagFlow: GetFeatureFlagFlow,
 ) : PhotoRepository {
 
     override suspend fun createPhotoShareWithRootLink(
@@ -171,58 +163,34 @@ class PhotoRepositoryImpl @Inject constructor(
     override suspend fun getPhotoListings(
         userId: UserId,
         volumeId: VolumeId,
-        fromIndex: Int,
         count: Int,
+        lastPhotoListing: PhotoListing?,
         sortingDirection: Direction,
         tag: PhotoTag?,
-    ): List<PhotoListing> = getFeatureFlag(
-        featureFlagId = driveAndroidPhotoListingWithFileProperties(userId)
-    ).let { featureFlag ->
-        if (featureFlag.on) {
-            if (tag == null) {
-                db.photoListingDao.getPhotoListingWithFileProperties(
-                    userId = userId,
-                    volumeId = volumeId.id,
-                    direction = sortingDirection,
-                    limit = count,
-                    offset = fromIndex,
-                ).map { photoListingWithFileProperties ->
-                    photoListingWithFileProperties.toPhotoListing()
-                }
-            } else {
-                db.taggedPhotoListingDao.getPhotoListingWithFileProperties(
-                    userId = userId,
-                    volumeId = volumeId.id,
-                    tag = tag.value,
-                    direction = sortingDirection,
-                    limit = count,
-                    offset = fromIndex,
-                ).map { taggedPhotoListingWithFileProperties ->
-                    taggedPhotoListingWithFileProperties.toPhotoListing()
-                }
-            }
-        } else {
-            if (tag == null) {
-                db.photoListingDao.getPhotoListings(
-                    userId = userId,
-                    volumeId = volumeId.id,
-                    direction = sortingDirection,
-                    limit = count,
-                    offset = fromIndex,
-                ).map { photoListingEntity -> photoListingEntity.toPhotoListing() }
-            } else {
-                db.taggedPhotoListingDao.getPhotoListings(
-                    userId = userId,
-                    volumeId = volumeId.id,
-                    tag = tag.value,
-                    direction = sortingDirection,
-                    limit = count,
-                    offset = fromIndex,
-                ).map { taggedPhotoListingEntity -> taggedPhotoListingEntity.toPhotoListing() }
-            }
+    ): List<PhotoListing> = if (tag == null) {
+        db.photoListingDao.getPhotoListingWithFileProperties(
+            userId = userId,
+            volumeId = volumeId.id,
+            direction = sortingDirection,
+            limit = count,
+            lastCaptureTime = lastPhotoListing?.captureTime?.value,
+            lastId = lastPhotoListing?.linkId?.id,
+        ).map { photoListingWithFileProperties ->
+            photoListingWithFileProperties.toPhotoListing()
+        }
+    } else {
+        db.taggedPhotoListingDao.getPhotoListingWithFileProperties(
+            userId = userId,
+            volumeId = volumeId.id,
+            tag = tag.value,
+            direction = sortingDirection,
+            limit = count,
+            lastCaptureTime = lastPhotoListing?.captureTime?.value,
+            lastId = lastPhotoListing?.linkId?.id,
+        ).map { taggedPhotoListingWithFileProperties ->
+            taggedPhotoListingWithFileProperties.toPhotoListing()
         }
     }
-
 
     override suspend fun findDuplicates(
         userId: UserId,
@@ -245,79 +213,41 @@ class PhotoRepositoryImpl @Inject constructor(
     override fun getPhotoListingsFlow(
         userId: UserId,
         volumeId: VolumeId,
-        fromIndex: Int,
         count: Int,
+        lastPhotoListing: PhotoListing?,
         sortingDirection: Direction,
         tag: PhotoTag?,
-    ): Flow<Result<List<PhotoListing>>> = getFeatureFlagFlow(
-        featureFlagId = driveAndroidPhotoListingWithFileProperties(userId),
-        emitNotFoundInitially = false,
-    ).transform { featureFlag ->
-        emitAll(
-            if (featureFlag.on) {
-                if (tag == null) {
-                    db.photoListingDao.getPhotoListingWithFilePropertiesFlow(
-                        userId = userId,
-                        volumeId = volumeId.id,
-                        direction = sortingDirection,
-                        limit = count,
-                        offset = fromIndex,
-                    ).map { entities ->
-                        coRunCatching {
-                            entities.map { photoListingWithFileProperties ->
-                                photoListingWithFileProperties.toPhotoListing()
-                            }
-                        }
-                    }
-                } else {
-                    db.taggedPhotoListingDao.getPhotoListingWithFilePropertiesFlow(
-                        userId = userId,
-                        volumeId = volumeId.id,
-                        tag = tag.value,
-                        direction = sortingDirection,
-                        limit = count,
-                        offset = fromIndex,
-                    ).map { entities ->
-                        coRunCatching {
-                            entities.map { taggedPhotoListingWithFileProperties ->
-                                taggedPhotoListingWithFileProperties.toPhotoListing()
-                            }
-                        }
-                    }
-                }
-            } else {
-                if (tag == null) {
-                    db.photoListingDao.getPhotoListingsFlow(
-                        userId = userId,
-                        volumeId = volumeId.id,
-                        direction = sortingDirection,
-                        limit = count,
-                        offset = fromIndex,
-                    ).map { entities ->
-                        coRunCatching {
-                            entities.map { photoListingEntity ->
-                                photoListingEntity.toPhotoListing()
-                            }
-                        }
-                    }
-                } else {
-                    db.taggedPhotoListingDao.getPhotoListingsFlow(
-                        userId = userId,
-                        volumeId = volumeId.id,
-                        tag = tag.value,
-                        direction = sortingDirection,
-                        limit = count,
-                        offset = fromIndex,
-                    ).map { entities ->
-                        coRunCatching {
-                            entities.map { taggedPhotoListingEntity ->
-                                taggedPhotoListingEntity.toPhotoListing()
-                            }
-                        }
-                    }
+    ): Flow<Result<List<PhotoListing>>> = if (tag == null) {
+        db.photoListingDao.getPhotoListingWithFilePropertiesFlow(
+            userId = userId,
+            volumeId = volumeId.id,
+            direction = sortingDirection,
+            limit = count,
+            lastCaptureTime = lastPhotoListing?.captureTime?.value,
+            lastId = lastPhotoListing?.linkId?.id,
+        ).map { entities ->
+            coRunCatching {
+                entities.map { photoListingWithFileProperties ->
+                    photoListingWithFileProperties.toPhotoListing()
                 }
             }
-        )
+        }
+    } else {
+        db.taggedPhotoListingDao.getPhotoListingWithFilePropertiesFlow(
+            userId = userId,
+            volumeId = volumeId.id,
+            tag = tag.value,
+            direction = sortingDirection,
+            limit = count,
+            lastCaptureTime = lastPhotoListing?.captureTime?.value,
+            lastId = lastPhotoListing?.linkId?.id,
+        ).map { entities ->
+            coRunCatching {
+                entities.map { taggedPhotoListingWithFileProperties ->
+                    taggedPhotoListingWithFileProperties.toPhotoListing()
+                }
+            }
+        }
     }
 
     private suspend fun fetchPhotoListingDtos(

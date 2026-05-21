@@ -156,7 +156,7 @@ class DownloadSdkManager @Inject constructor(
         with(state) {
             CoreLogger.d(
                 DOWNLOAD, "Cancelling sdk: " +
-                        "uploader: ${downloader != null}, " +
+                        "downloader: ${downloader != null}, " +
                         "controller: ${controller != null}"
             )
             mutex.withLock {
@@ -168,6 +168,30 @@ class DownloadSdkManager @Inject constructor(
                     cancel()
                     close()
                 }
+            }
+        }
+    }
+
+    suspend fun cancelController(
+        volumeId: VolumeId,
+        fileId: FileId,
+        revisionId: String
+    ) {
+        val nodeRevisionUid = fileId.revisionUid(
+            volumeId = volumeId,
+            revisionId = revisionId,
+        )
+        val state = states.remove(nodeRevisionUid) ?: return
+        with(state) {
+            CoreLogger.d(
+                DOWNLOAD, "Cancelling sdk controller: ${downloader != null}"
+            )
+            mutex.withLock {
+                controller?.apply {
+                    cancel()
+                    close()
+                }
+                controller = null
             }
         }
     }

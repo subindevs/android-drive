@@ -41,16 +41,22 @@ import me.proton.core.drive.share.domain.entity.ShareId
 import me.proton.core.drive.share.domain.entity.ShareInfo
 import me.proton.core.drive.share.domain.entity.ShareMembership
 import me.proton.core.drive.share.domain.repository.ShareRepository
+import me.proton.core.drive.volume.data.extension.toVolumeType
+import me.proton.core.drive.volume.domain.entity.Volume
 import me.proton.core.drive.volume.domain.entity.VolumeId
 import me.proton.core.user.domain.entity.AddressId
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ShareRepositoryImpl @Inject constructor(
     private val api: ShareApiDataSource,
     private val db: ShareDatabase,
     private val getUserEmail: GetUserEmail,
 ) : ShareRepository {
     private val dao: ShareDao = db.shareDao
+    private val volumeTypeCache = ConcurrentHashMap<ShareId, Volume.Type>()
 
     override fun getSharesFlow(userId: UserId): Flow<DataResult<List<Share>>> =
         dao.getAllFlow(userId)
@@ -100,14 +106,22 @@ class ShareRepositoryImpl @Inject constructor(
 
     override suspend fun fetchShare(shareId: ShareId) {
         val response = api.getShareBootstrap(shareId)
+        val membershipAndEmail = response.memberships.firstOrNull()?.let { membershipDto ->
+            membershipDto to getUserEmail(
+                userId = shareId.userId,
+                addressId = AddressId(membershipDto.addressId),
+            ).getOrThrow()
+        }
         db.inTransaction {
             dao.insertOrUpdate(response.toShareEntity(shareId.userId))
-            response.memberships.firstOrNull()?.let { membershipDto ->
-                val email = getUserEmail(
-                    userId = shareId.userId,
-                    addressId = AddressId(membershipDto.addressId),
+            if (membershipAndEmail != null) {
+                val (membershipDto, email) = membershipAndEmail.first to membershipAndEmail.second
+                db.shareMembershipDao.insertOrUpdate(
+                    membershipDto.toShareUserMember(
+                        shareId,
+                        email
+                    )
                 )
-                db.shareMembershipDao.insertOrUpdate(membershipDto.toShareUserMember(shareId, email))
             }
         }
     }
@@ -155,6 +169,27 @@ class ShareRepositoryImpl @Inject constructor(
             Permissions(value)
         }
     }.orEmpty()
+
+    override suspend fun getVolumeType(shareId: ShareId): Result<Volume.Type> = coRunCatching {
+        volumeTypeCache[shareId] ?: run {
+            val cached = dao.get(
+                userId = shareId.userId,
+                shareId = shareId.id,
+            )?.volumeType?.toVolumeType()
+
+            val type = if (cached != null) {
+                cached
+            } else {
+                fetchShare(shareId)
+                dao.get(
+                    userId = shareId.userId,
+                    shareId = shareId.id,
+                )?.volumeType?.toVolumeType()
+            } ?: error("Cannot find volume type for ${shareId.id}")
+
+            volumeTypeCache.putIfAbsent(shareId, type) ?: type
+        }
+    }
 
     override fun getMembership(shareId: ShareId): Flow<DataResult<ShareMembership>> =
         db.shareMembershipDao.get(

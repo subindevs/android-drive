@@ -20,9 +20,10 @@ package me.proton.core.drive.base.data.extension
 
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromJsonElement
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.network.domain.ApiResult
 
-inline fun <reified T> ApiResult.Error.ProtonData.detailsOrNull(): T? = runCatching {
+inline fun <reified T> ApiResult.Error.ProtonData.detailsOrNull(): T? = coRunCatching {
     details?.let { details ->
         val json = Json {
             ignoreUnknownKeys = true

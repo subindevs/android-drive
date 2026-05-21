@@ -220,7 +220,7 @@ fun PhotosContent(
             items(
                 count = items.itemCount,
                 span = { index ->
-                    when (items[index]) {
+                    when (items.peek(index)) {
                         is PhotosItem.Separator -> GridItemSpan(maxLineSpan)
                         else -> GridItemSpan(1)
                     }

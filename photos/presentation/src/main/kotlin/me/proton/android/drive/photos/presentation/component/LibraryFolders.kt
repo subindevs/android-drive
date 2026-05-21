@@ -48,10 +48,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Scale
@@ -66,7 +67,6 @@ import me.proton.core.compose.theme.ProtonTheme
 import me.proton.core.compose.theme.captionWeak
 import me.proton.core.compose.theme.defaultNorm
 import me.proton.core.compose.theme.defaultSmallNorm
-import me.proton.core.drive.base.presentation.component.text.TextWithMiddleEllipsis
 import me.proton.core.drive.link.domain.entity.FolderId
 
 @Composable
@@ -218,9 +218,10 @@ internal fun LibraryFolderItem(
         Column(
             modifier = Modifier.weight(1f),
         ) {
-            TextWithMiddleEllipsis(
+            Text(
                 name,
                 maxLines = 1,
+                overflow = TextOverflow.MiddleEllipsis,
                 style = ProtonTheme.typography.defaultNorm(checked),
             )
             description()

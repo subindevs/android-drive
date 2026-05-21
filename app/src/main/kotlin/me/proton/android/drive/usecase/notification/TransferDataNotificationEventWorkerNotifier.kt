@@ -21,6 +21,7 @@ package me.proton.android.drive.usecase.notification
 import android.app.Notification
 import me.proton.core.domain.entity.UserId
 import me.proton.core.drive.announce.event.domain.entity.Event
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.notification.data.extension.id
 import me.proton.core.drive.notification.domain.entity.NotificationId
 import me.proton.core.drive.notification.domain.manager.NotificationManager
@@ -36,7 +37,7 @@ class TransferDataNotificationEventWorkerNotifier @Inject constructor(
     override operator fun invoke(
         userId: UserId,
         event: Event.TransferData,
-    ): Result<Pair<NotificationId, Notification>> = runCatching {
+    ): Result<Pair<NotificationId, Notification>> = coRunCatching {
         createUserNotificationId(userId, event).let { notificationId ->
             if (notificationManager.hasValidChannel(notificationId).not()) {
                 error("Notification $notificationId does not have a valid channel (${notificationId.channel.id})")

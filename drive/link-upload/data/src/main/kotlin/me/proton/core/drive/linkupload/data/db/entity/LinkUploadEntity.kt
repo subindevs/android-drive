@@ -81,6 +81,7 @@ import me.proton.core.drive.linkupload.domain.entity.UploadState
         Index(value = [LINK_ID]),
         Index(value = [REVISION_ID]),
         Index(value = [PARENT_ID]),
+        Index(value = [URI]),
     ]
 )
 data class LinkUploadEntity(

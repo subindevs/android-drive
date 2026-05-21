@@ -72,6 +72,7 @@ sealed class Event {
     data class UploadSpeed(
         val bytes: Bytes,
         val elapsedTime: TimestampMs,
+        val usedSdk: Boolean = true,
     ) : Event() {
         override val id: String =
             "$EVENT_ID_PREFIX${this.javaClass.simpleName.uppercase()}_1"
@@ -82,6 +83,7 @@ sealed class Event {
     data class DownloadSpeed(
         val bytes: Bytes,
         val elapsedTime: TimestampMs,
+        val usedSdk: Boolean = true,
     ) : Event() {
         override val id: String =
             "$EVENT_ID_PREFIX${this.javaClass.simpleName.uppercase()}_1"

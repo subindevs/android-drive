@@ -38,7 +38,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.launchIn
@@ -58,7 +59,6 @@ import me.proton.core.compose.theme.headlineSmallNorm
 import me.proton.core.drive.base.presentation.component.EncryptedItem
 import me.proton.core.drive.base.presentation.component.TopAppBar
 import me.proton.core.drive.base.presentation.component.TopBarActions
-import me.proton.core.drive.base.presentation.component.text.TextWithMiddleEllipsis
 import me.proton.core.drive.files.presentation.component.DriveLinksFlow
 import me.proton.core.drive.files.presentation.component.Files
 import me.proton.core.drive.link.domain.entity.FolderId
@@ -189,9 +189,10 @@ fun Title(
                 modifier = Modifier.weight(1f)
             )
         } else {
-            TextWithMiddleEllipsis(
+            Text(
                 text = title,
                 maxLines = 1,
+                overflow = TextOverflow.MiddleEllipsis,
                 style = ProtonTheme.typography.defaultHighlightNorm,
             )
         }

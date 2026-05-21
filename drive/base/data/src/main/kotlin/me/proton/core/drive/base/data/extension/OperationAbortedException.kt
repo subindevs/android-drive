@@ -34,8 +34,8 @@ fun OperationAbortedException.log(
     level: LoggerLevel? = LoggerLevel.ERROR,
 ): OperationAbortedException = also {
     val abortCause = cause
-    if (abortCause is ProtonDriveSdkException && abortCause.error?.domain == ErrorDomain.SuccessfulCancellation) {
-        LoggerLevel.DEBUG
+    if (abortCause is ProtonDriveSdkException) {
+        abortCause.loggerLevel(level)
     } else {
         level
     }.log(tag, this, message)

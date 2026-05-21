@@ -29,7 +29,9 @@
   <string name="common_type">Soort</string>
   <string name="common_yes">Ja</string>
   <string name="common_download">Downloaden</string>
+  <string name="common_downloaded">Gedownload</string>
   <string name="common_downloading">Downloaden</string>
+  <string name="common_waiting_for_download">Wachten op download</string>
   <string name="common_link">Koppeling</string>
   <string name="common_password">Wachtwoord</string>
   <string name="common_retry">Opnieuw proberen</string>
@@ -61,6 +63,7 @@
   <string name="common_delete_permanently_action">Permanent verwijderen</string>
   <string name="common_make_available_offline_action">Offline beschikbaar maken</string>
   <string name="common_remove_from_offline_available_action">Verwijderen uit offline beschikbaar</string>
+  <string name="common_remove_all_from_offline_available_action">Verwijder alles uit offline beschikbaar</string>
   <string name="common_get_link_action">Link krijgen</string>
   <string name="common_manage_link_action">Beheer link</string>
   <string name="common_manage_access_action">Toegang beheren</string>
@@ -79,6 +82,8 @@
   <string name="common_tag_photo_action">Foto scannen op tags</string>
   <string name="common_save_as_action">Opslaan als</string>
   <string name="common_open_action">Openen</string>
+  <string name="common_back_action">Terug</string>
+  <string name="common_open_side_menu_action">Open zijmenu</string>
   <!-- endregion -->
   <!-- region Common file types -->
   <string name="common_type_audio">Audio</string>

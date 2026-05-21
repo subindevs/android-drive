@@ -35,6 +35,7 @@ import me.proton.core.drive.link.domain.extension.toSdkPhotoTag
 import me.proton.core.drive.linkupload.domain.entity.UploadFileLink
 import me.proton.core.drive.linkupload.domain.entity.UploadState
 import me.proton.core.drive.linkupload.domain.usecase.GetPhotoTags
+import me.proton.core.drive.linkupload.domain.usecase.UpdateSize
 import me.proton.core.drive.linkupload.domain.usecase.UpdateUploadFileCreationTime
 import me.proton.core.drive.linkupload.domain.usecase.UpdateUploadState
 import me.proton.core.drive.share.domain.entity.Share
@@ -47,8 +48,6 @@ import javax.inject.Inject
 
 class CreateNewFileSdk @Inject constructor(
     private val uploadSdkManager: UploadSdkManager,
-    private val getUploadFileSize: GetUploadFileSize,
-    private val getUploadFileLastModified: GetUploadFileLastModified,
     private val updateUploadState: UpdateUploadState,
     private val getFileName: GetFileName,
     private val updateUploadFileCreationTime: UpdateUploadFileCreationTime,
@@ -56,6 +55,8 @@ class CreateNewFileSdk @Inject constructor(
     private val getPhotoTags: GetPhotoTags,
     private val getShare: GetShare,
     private val photoAdditionalMetadata: PhotoAdditionalMetadata,
+    private val getInputStreamSize: GetInputStreamSize,
+    private val updateSize: UpdateSize,
 ) {
 
     suspend operator fun invoke(
@@ -71,10 +72,8 @@ class CreateNewFileSdk @Inject constructor(
                     name = uploadFileLink.name,
                     folderId = uploadFileLink.parentLinkId,
                 ).getOrThrow()
-                val size = requireNotNull(getUploadFileSize(uriString)) {
-                    "Cannot get size of $uriString"
-                }
-                val lastModified = getUploadFileLastModified(uriString)?.toInstant()
+                val size = uploadFileLink.getOrUpdateSize(uriString).getOrThrow()
+                val lastModified = uploadFileLink.lastModified?.toInstant()
                 if (uploadFileLink.isPhoto()) {
                     uploadFileLink.enqueuePhoto(
                         name = fileName,
@@ -143,5 +142,17 @@ class CreateNewFileSdk @Inject constructor(
     private suspend fun UploadFileLink.isPhoto(): Boolean {
         val share = getShare(shareId, flowOf(false)).toResult().getOrThrow()
         return share.type == Share.Type.PHOTO
+    }
+
+    private suspend fun UploadFileLink.getOrUpdateSize(
+        uriString: String
+    ): Result<Bytes> = coRunCatching {
+        val uriSize = getInputStreamSize(uriString).getOrThrow()
+        val uploadFileLinkSize = size
+        if (uploadFileLinkSize != null && uploadFileLinkSize == uriSize) {
+            return@coRunCatching uploadFileLinkSize
+        }
+        updateSize(id, uriSize).getOrThrow()
+        uriSize
     }
 }

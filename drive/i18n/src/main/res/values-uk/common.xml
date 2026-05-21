@@ -29,7 +29,9 @@
   <string name="common_type">Тип</string>
   <string name="common_yes">Так</string>
   <string name="common_download">Завантажити</string>
+  <string name="common_downloaded">Downloaded</string>
   <string name="common_downloading">Завантаження</string>
+  <string name="common_waiting_for_download">Waiting for download</string>
   <string name="common_link">Посилання</string>
   <string name="common_password">Пароль</string>
   <string name="common_retry">Повторити спробу</string>
@@ -61,6 +63,7 @@
   <string name="common_delete_permanently_action">Видалити остаточно</string>
   <string name="common_make_available_offline_action">Завантажити для доступу офлайн</string>
   <string name="common_remove_from_offline_available_action">Вилучити з офлайн-доступу</string>
+  <string name="common_remove_all_from_offline_available_action">Remove all from offline available</string>
   <string name="common_get_link_action">Отримати посилання</string>
   <string name="common_manage_link_action">Керувати посиланням</string>
   <string name="common_manage_access_action">Керувати доступом</string>
@@ -79,6 +82,8 @@
   <string name="common_tag_photo_action">Сканувати фото для тегів</string>
   <string name="common_save_as_action">Save as</string>
   <string name="common_open_action">Open</string>
+  <string name="common_back_action">Back</string>
+  <string name="common_open_side_menu_action">Open side menu</string>
   <!-- endregion -->
   <!-- region Common file types -->
   <string name="common_type_audio">Аудіо</string>

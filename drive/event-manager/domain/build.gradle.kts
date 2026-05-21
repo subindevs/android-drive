@@ -36,6 +36,7 @@ driveModule(
     api(project(":drive:link:domain"))
     api(project(":drive:link-trash:domain"))
     api(project(":drive:photo:domain"))
+    api(project(":drive:upload:domain"))
     api(project(":drive:share:domain"))
     api(project(":drive:share-crypto:domain"))
     api(project(":drive:share-url:base:domain"))

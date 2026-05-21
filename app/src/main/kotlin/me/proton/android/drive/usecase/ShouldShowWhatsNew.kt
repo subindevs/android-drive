@@ -22,7 +22,6 @@ import kotlinx.coroutines.flow.first
 import me.proton.core.domain.entity.UserId
 import me.proton.core.drive.base.domain.entity.TimestampS
 import me.proton.core.drive.base.domain.util.coRunCatching
-import me.proton.core.drive.feature.flag.domain.entity.FeatureFlagId.Companion.driveAndroidUploadFolder
 import me.proton.core.drive.feature.flag.domain.entity.FeatureFlagId.Companion.driveAndroidWhatsNew
 import me.proton.core.drive.feature.flag.domain.extension.on
 import me.proton.core.drive.feature.flag.domain.usecase.GetFeatureFlagFlow
@@ -45,8 +44,8 @@ class ShouldShowWhatsNew @Inject constructor(
         ) {
             when {
                 canShow(WhatsNewKey.UPLOAD_FOLDER) &&
-                        isApplicable(WhatsNewKey.UPLOAD_FOLDER, currentHomeTab) &&
-                        uploadFolderOn(userId) -> WhatsNewKey.UPLOAD_FOLDER
+                        isApplicable(WhatsNewKey.UPLOAD_FOLDER, currentHomeTab)
+                            -> WhatsNewKey.UPLOAD_FOLDER
                 else -> null
             }
         } else {
@@ -57,12 +56,7 @@ class ShouldShowWhatsNew @Inject constructor(
     private suspend fun ShouldShowWhatsNew.canShow(key: WhatsNewKey) =
         TimestampS() < key.limit && wasWhatsNewShown(key).getOrThrow().not()
 
-    private fun ShouldShowWhatsNew.isApplicable(key: WhatsNewKey, currentHomeTab: HomeTab?) = currentHomeTab?.let {
+    private fun isApplicable(key: WhatsNewKey, currentHomeTab: HomeTab?) = currentHomeTab?.let {
         key.applicableHomeTabs.contains(currentHomeTab)
     } ?: true
-
-    private suspend fun uploadFolderOn(userId: UserId): Boolean = getFeatureFlagFlow(
-        featureFlagId = driveAndroidUploadFolder(userId),
-        emitNotFoundInitially = false,
-    ).first().on
 }

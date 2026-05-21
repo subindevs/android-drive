@@ -37,12 +37,14 @@ import me.proton.core.drive.photo.domain.usecase.InsertOrDeleteAlbumListings
 import me.proton.core.drive.photo.domain.usecase.InsertOrDeleteAlbumPhotoListings
 import me.proton.core.drive.photo.domain.usecase.InsertOrDeletePhotoListings
 import me.proton.core.drive.share.crypto.domain.usecase.GetPhotoShare
+import me.proton.core.drive.upload.domain.usecase.CancelAllUpload
 import me.proton.core.util.kotlin.CoreLogger
 import javax.inject.Inject
 
 class HandleCreateOrUpdateLinksEvent @Inject constructor(
     private val insertOrUpdateLinks: InsertOrUpdateLinks,
     private val setOrRemoveTrashState: SetOrRemoveTrashState,
+    private val cancelAllUpload: CancelAllUpload,
     private val updateOfflineContent: UpdateOfflineContent,
     private val getLink: GetLink,
     private val insertOrDeletePhotoListings: InsertOrDeletePhotoListings,
@@ -61,6 +63,8 @@ class HandleCreateOrUpdateLinksEvent @Inject constructor(
                 .forEach { (volumeId, links) ->
                     val modifiedStateOrParentLinks = links.modifiedStateOrParentLinks()
                     insertOrUpdateLinks(links)
+                    cancelAllUpload(links.filterFoldersTrashedOrDeleted())
+
                     setOrRemoveTrashState(volumeId, links)
                     updateOfflineContent(
                         modifiedStateOrParentLinks.ids +
@@ -71,6 +75,12 @@ class HandleCreateOrUpdateLinksEvent @Inject constructor(
                     insertOrDeleteAlbumListings(volumeId, links.filterIsInstance<Link.Album>())
                 }
         }
+    }
+
+    private fun List<Link>.filterFoldersTrashedOrDeleted(): List<Link.Folder> {
+        val trashOrDeleted = listOf(Link.State.TRASHED, Link.State.DELETED)
+        return filterIsInstance<Link.Folder>()
+            .filter { it.state in trashOrDeleted }
     }
 
     private suspend fun List<Link>.modifiedStateOrParentLinks() = filter { link ->

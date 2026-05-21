@@ -22,6 +22,7 @@ import kotlinx.serialization.json.Json
 import me.proton.core.drive.base.data.api.Dto
 import me.proton.core.drive.base.data.extension.log
 import me.proton.core.drive.base.domain.log.LogTag
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.eventmanager.api.response.DriveCoreEventDto
 import me.proton.core.drive.eventmanager.entity.DriveCoreEvent
 import me.proton.core.drive.eventmanager.usecase.OnUpdateDriveCoreEvent
@@ -45,7 +46,7 @@ class DriveCoreEventListener @Inject constructor(
         config: EventManagerConfig,
         response: EventsResponse
     ): List<Event<String, DriveCoreEvent>>? {
-        return runCatching {
+        return coRunCatching {
             json.decodeFromString<DriveCoreEventDto>(response.body).let { driveCoreEventDto ->
                 driveCoreEventDto.driveShareRefresh?.eventAction?.let { eventAction ->
                     listOf(

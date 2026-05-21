@@ -37,6 +37,7 @@ import me.proton.core.drive.base.domain.extension.filterSuccessOrError
 import me.proton.core.drive.base.domain.extension.orNow
 import me.proton.core.drive.base.domain.extension.toResult
 import me.proton.core.drive.base.domain.provider.ConfigurationProvider
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.link.domain.entity.FileId
 import me.proton.core.drive.link.domain.entity.PhotoTag
 import me.proton.core.drive.link.domain.extension.userId
@@ -88,7 +89,7 @@ class TagsMigrationRepositoryImpl @Inject constructor(
         .mapSuccessValueOrNull()
         .filterNotNull()
         .transformLatest { volume ->
-            runCatching { getStatus(userId, volume.id) }.getOrNull()?.let { status ->
+            coRunCatching { getStatus(userId, volume.id) }.getOrNull()?.let { status ->
                 emit(status)
             }
             emitAll(getUserDataStore(userId).data.mapLatest { preferences: Preferences ->

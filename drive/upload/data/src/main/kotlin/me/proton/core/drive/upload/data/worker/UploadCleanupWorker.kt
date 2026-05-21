@@ -52,6 +52,7 @@ import me.proton.core.drive.upload.data.worker.WorkerKeys.KEY_UPLOAD_FILE_LINK_I
 import me.proton.core.drive.upload.data.worker.WorkerKeys.KEY_USER_ID
 import me.proton.core.drive.upload.domain.manager.UploadErrorManager
 import me.proton.core.drive.upload.domain.manager.UploadSdkManager
+import me.proton.core.drive.upload.domain.resolver.UriResolver
 import me.proton.core.drive.upload.domain.usecase.AnnounceUploadEvent
 import me.proton.core.drive.upload.domain.usecase.GetBlockFolder
 import me.proton.core.drive.upload.domain.usecase.RemoveUploadFile
@@ -76,6 +77,7 @@ class UploadCleanupWorker @AssistedInject constructor(
     uploadErrorManager: UploadErrorManager,
     private val getBlockFolder: GetBlockFolder,
     private val removeUploadFile: RemoveUploadFile,
+    private val uriResolver: UriResolver,
     private val announceUploadEvent: AnnounceUploadEvent,
     private val networkTypeProviders: @JvmSuppressWildcards Map<NetworkTypeProviderType, NetworkTypeProvider>,
     private val cleanupVerifier: CleanupVerifier,
@@ -139,6 +141,7 @@ class UploadCleanupWorker @AssistedInject constructor(
                     CoreLogger.w(uploadFileLink.logTag(), "Cannot delete all the files")
                 }
             }
+            uploadFileLink.uriString?.let { uriResolver.release(it) }
             removeUploadFile(uploadFileLink).onFailure { error ->
                 error.log(uploadFileLink.logTag(), "Cannot remove file")
             }

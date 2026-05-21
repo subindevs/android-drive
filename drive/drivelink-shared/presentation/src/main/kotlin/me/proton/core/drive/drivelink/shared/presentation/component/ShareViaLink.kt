@@ -36,7 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import me.proton.core.compose.component.ProtonErrorMessage
 import me.proton.core.compose.component.ProtonErrorMessageWithAction
 import me.proton.core.compose.component.ProtonTextButton

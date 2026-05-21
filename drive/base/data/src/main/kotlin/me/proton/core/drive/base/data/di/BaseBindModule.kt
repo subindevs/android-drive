@@ -27,6 +27,7 @@ import me.proton.core.drive.base.data.usecase.CopyToClipboardImpl
 import me.proton.core.drive.base.data.usecase.DeviceInfoImpl
 import me.proton.core.drive.base.data.usecase.GetInternalStorageInfoImpl
 import me.proton.core.drive.base.data.usecase.GetMemoryInfoImpl
+import me.proton.core.drive.base.data.usecase.IsRetryableImpl
 import me.proton.core.drive.base.data.usecase.LogReportError
 import me.proton.core.drive.base.data.usecase.Sha256Impl
 import me.proton.core.drive.base.domain.formatter.DateTimeFormatter
@@ -35,6 +36,7 @@ import me.proton.core.drive.base.domain.usecase.CopyToClipboard
 import me.proton.core.drive.base.domain.usecase.DeviceInfo
 import me.proton.core.drive.base.domain.usecase.GetInternalStorageInfo
 import me.proton.core.drive.base.domain.usecase.GetMemoryInfo
+import me.proton.core.drive.base.domain.usecase.IsRetryable
 import me.proton.core.drive.base.domain.usecase.ReportError
 import me.proton.core.drive.base.domain.usecase.Sha256
 import javax.inject.Singleton
@@ -74,4 +76,8 @@ interface BaseBindModule {
     @Binds
     @Singleton
     fun bindsLogReportError(impl: LogReportError): ReportError
+
+    @Binds
+    @Singleton
+    fun bindsIsRetryable(impl: IsRetryableImpl): IsRetryable
 }

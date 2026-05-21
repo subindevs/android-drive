@@ -28,6 +28,7 @@ import me.proton.core.drive.base.data.extension.log
 import me.proton.core.drive.base.domain.extension.getOrNull
 import me.proton.core.drive.base.domain.extension.toResult
 import me.proton.core.drive.base.domain.log.LogTag
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.eventmanager.api.response.CreateLinksEvent
 import me.proton.core.drive.eventmanager.api.response.DeleteLinksEvent
 import me.proton.core.drive.eventmanager.api.response.Events
@@ -83,7 +84,7 @@ class LinkEventListener @Inject constructor(
         config: EventManagerConfig,
         response: EventsResponse,
     ): List<Event<LinkId, LinkEventVO>>? {
-        return runCatching {
+        return coRunCatching {
             json.decodeFromString<Events>(response.body).events.flatMap { event ->
                 when (event) {
                     is DeleteLinksEvent -> event.getLinkIds(config).map { linkId ->

@@ -76,6 +76,7 @@ import me.proton.core.drive.share.data.db.ShareEntity
         Index(value = [USER_ID, SHARE_ID, PARENT_ID, URI]),
         Index(value = [USER_ID, SHARE_ID, PARENT_ID, STATE]),
         Index(value = [USER_ID, SHARE_ID, PARENT_ID, BUCKET_ID, STATE]),
+        Index(value = [USER_ID, STATE]),
     ]
 )
 data class BackupFileEntity(

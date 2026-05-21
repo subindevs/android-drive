@@ -44,6 +44,7 @@ import me.proton.core.drive.upload.data.worker.WorkerKeys.KEY_UPLOAD_FILE_LINK_I
 import me.proton.core.drive.upload.data.worker.WorkerKeys.KEY_USER_ID
 import me.proton.core.drive.upload.domain.manager.UploadErrorManager
 import me.proton.core.drive.upload.domain.manager.UploadSdkManager
+import me.proton.core.drive.upload.domain.resolver.UriResolver
 import me.proton.core.drive.upload.domain.usecase.AnnounceUploadEvent
 import me.proton.core.drive.upload.domain.usecase.RemoveUploadFile
 import me.proton.core.drive.upload.domain.usecase.UploadMetricsNotifier
@@ -62,6 +63,7 @@ class UploadSuccessCleanupWorker @AssistedInject constructor(
     getUploadFileLink: GetUploadFileLink,
     uploadErrorManager: UploadErrorManager,
     private val removeUploadFile: RemoveUploadFile,
+    private val uriResolver: UriResolver,
     private val announceUploadEvent: AnnounceUploadEvent,
     private val uploadSdkManager: UploadSdkManager,
     configurationProvider: ConfigurationProvider,
@@ -97,6 +99,7 @@ class UploadSuccessCleanupWorker @AssistedInject constructor(
             )
         )
         uploadSdkManager.close(uploadFileLink)
+        uriString?.let { uriResolver.release(it) }
         removeUploadFile(uploadFileLink = this).onFailure { error ->
             error.log(uploadFileLink.logTag(), "Cannot remove upload file")
         }

@@ -29,7 +29,9 @@
   <string name="common_type">유형</string>
   <string name="common_yes">예</string>
   <string name="common_download">다운로드</string>
+  <string name="common_downloaded">Downloaded</string>
   <string name="common_downloading">다운로드 중</string>
+  <string name="common_waiting_for_download">Waiting for download</string>
   <string name="common_link">링크</string>
   <string name="common_password">비밀번호</string>
   <string name="common_retry">다시 시도</string>
@@ -61,6 +63,7 @@
   <string name="common_delete_permanently_action">영구적으로 삭제</string>
   <string name="common_make_available_offline_action">오프라인 사용 설정</string>
   <string name="common_remove_from_offline_available_action">오프라인 사용 지우기</string>
+  <string name="common_remove_all_from_offline_available_action">Remove all from offline available</string>
   <string name="common_get_link_action">링크 생성</string>
   <string name="common_manage_link_action">링크 관리</string>
   <string name="common_manage_access_action">접근 관리</string>
@@ -79,6 +82,8 @@
   <string name="common_tag_photo_action">사진 태그 검색</string>
   <string name="common_save_as_action">다른 이름으로 저장</string>
   <string name="common_open_action">열기</string>
+  <string name="common_back_action">Back</string>
+  <string name="common_open_side_menu_action">Open side menu</string>
   <!-- endregion -->
   <!-- region Common file types -->
   <string name="common_type_audio">오디오</string>

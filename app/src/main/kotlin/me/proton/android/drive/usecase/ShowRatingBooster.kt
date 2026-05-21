@@ -28,6 +28,7 @@ import me.proton.android.drive.log.DriveLogTag.UI
 import me.proton.core.accountmanager.domain.AccountManager
 import me.proton.core.drive.base.data.entity.LoggerLevel.WARNING
 import me.proton.core.drive.base.data.extension.log
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.util.kotlin.CoreLogger
 import javax.inject.Inject
 
@@ -38,7 +39,7 @@ class ShowRatingBooster @Inject constructor(
 ) {
 
     operator fun invoke(activity: Activity) {
-        runCatching {
+        coRunCatching {
             reviewManager.requestReviewFlow().addOnCompleteListener { infoTask ->
                 if (infoTask.isSuccessful) {
                     reviewManager.launchReviewFlow(activity, infoTask.result)

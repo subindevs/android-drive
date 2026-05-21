@@ -42,7 +42,6 @@ import me.proton.core.compose.theme.ProtonTheme
 import me.proton.core.compose.theme.captionWeak
 import me.proton.core.compose.theme.defaultSmallStrong
 import me.proton.core.drive.base.presentation.component.EncryptedItem
-import me.proton.core.drive.base.presentation.component.text.TextWithMiddleEllipsis
 
 @Composable
 fun OptionsHeader(
@@ -93,10 +92,11 @@ fun OptionsHeader(
                 if (isEncrypted) {
                     EncryptedItem()
                 } else {
-                    TextWithMiddleEllipsis(
+                    Text(
                         text = title,
                         style = ProtonTheme.typography.defaultSmallStrong,
                         maxLines = 1,
+                        overflow = TextOverflow.MiddleEllipsis,
                     )
                 }
             }
@@ -121,10 +121,11 @@ internal fun OptionsHeader(
             .padding(start = HeaderSpacing),
         contentAlignment = Alignment.CenterStart
     ) {
-        TextWithMiddleEllipsis(
+        Text(
             text = title,
             style = ProtonTheme.typography.defaultSmallStrong,
             maxLines = 1,
+            overflow = TextOverflow.MiddleEllipsis,
         )
     }
 }

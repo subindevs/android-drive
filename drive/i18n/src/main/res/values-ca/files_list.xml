@@ -63,6 +63,9 @@
   <string name="files_confirm_empty_trash_title">Buida la paperera?</string>
   <string name="files_confirm_empty_trash_message">Els elements a la paperera seran eliminats permanentment. No podeu desfer aquesta acció.</string>
   <string name="files_confirm_empty_trash_confirm_action">Buida la paperera</string>
+  <string name="files_confirm_remove_all_offline_title">Voleu esborrar-ho tot del mode fora de línia?</string>
+  <string name="files_confirm_remove_all_offline_message">Els fitxers ja no estaran disponibles fora de línia.</string>
+  <string name="files_confirm_remove_all_offline_confirm_action">Esborra-ho tot</string>
   <string name="files_display_file_info_action">Detalls del fitxer</string>
   <string name="files_display_folder_info_action">Detalls de la carpeta</string>
 </resources>

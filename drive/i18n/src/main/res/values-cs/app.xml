@@ -165,10 +165,10 @@
             "Downloading 3 files"
     -->
   <plurals name="notification_content_text_download_downloading">
-    <item quantity="one">Downloading %1$d file</item>
-    <item quantity="few">Downloading %1$d files</item>
-    <item quantity="many">Downloading %1$d files</item>
-    <item quantity="other">Downloading %1$d files</item>
+    <item quantity="one">Stahuji %1$d soubor</item>
+    <item quantity="few">Stahuji %1$d soubory</item>
+    <item quantity="many">Stahuji %1$d souborů</item>
+    <item quantity="other">Stahuji %1$d souborů</item>
   </plurals>
   <string name="notification_content_title_download_complete">Stahování dokončeno</string>
   <string name="notification_content_title_forced_sign_out">Přihlaste se, prosím</string>

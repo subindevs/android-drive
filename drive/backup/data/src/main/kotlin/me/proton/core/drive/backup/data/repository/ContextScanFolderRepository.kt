@@ -37,6 +37,7 @@ import me.proton.core.drive.base.domain.entity.TimestampS
 import me.proton.core.drive.base.domain.extension.bytes
 import me.proton.core.drive.base.domain.log.LogTag.BACKUP
 import me.proton.core.drive.base.domain.provider.ConfigurationProvider
+import me.proton.core.drive.base.domain.util.coRunCatching
 import javax.inject.Inject
 
 class ContextScanFolderRepository @Inject constructor(
@@ -91,23 +92,23 @@ private fun Cursor.createMedia(backupFolder: BackupFolder, uri: Uri): List<Backu
         val size = getColumnIndexOrThrow(MediaStore.MediaColumns.SIZE)
         val mimeType = getColumnIndexOrThrow(MediaStore.MediaColumns.MIME_TYPE)
         while (moveToNext()) {
-            runCatching {
+            coRunCatching {
                 listOfAllImages.add(
                     BackupFile(
                         bucketId = backupFolder.bucketId,
                         folderId = backupFolder.folderId,
                         uriString = Uri.withAppendedPath(
-                            uri, getInt(id).toString()
+                            uri, getLong(id).toString()
                         )?.let { uriMedia ->
                             MediaStore.setRequireOriginal(uriMedia)
                         }.toString(),
                         mimeType = getStringOrThrow(mimeType),
                         name = getStringOrThrow(displayName),
                         hash = null,
-                        size = getInt(size).bytes,
+                        size = getLong(size).bytes,
                         state = BackupFileState.IDLE,
-                        date = TimestampS(getInt(dateAdded).toLong()),
-                        lastModified = TimestampS(getInt(dateModified).toLong()),
+                        date = TimestampS(getLong(dateAdded)),
+                        lastModified = TimestampS(getLong(dateModified)),
                     )
                 )
             }.onFailure { error ->

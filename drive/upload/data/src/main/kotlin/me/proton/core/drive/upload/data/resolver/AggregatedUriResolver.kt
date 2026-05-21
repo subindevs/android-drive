@@ -56,6 +56,9 @@ class AggregatedUriResolver @Inject constructor(
     override suspend fun getUriInfo(uriString: String): UriResolver.UriInfo? =
         uriResolvers.forScheme(uriString).getUriInfo(uriString)
 
+    override suspend fun release(uriString: String) =
+        uriResolvers[Uri.parse(uriString).scheme]?.release(uriString) ?: Unit
+
     private fun Map<String, UriResolver>.forScheme(uriString: String): UriResolver =
         get(Uri.parse(uriString).scheme)
             ?: throw IllegalStateException("No Uri resolver for given Uri scheme ${Uri.parse(uriString).scheme}")

@@ -29,7 +29,6 @@ import me.proton.core.drive.observability.domain.constraint.MinimumIntervalConst
 import me.proton.core.drive.observability.domain.metrics.common.Plan
 import me.proton.core.drive.observability.domain.metrics.common.ResultStatus
 import me.proton.core.drive.observability.domain.metrics.common.VolumeType
-import me.proton.core.drive.observability.domain.metrics.sdk.DownloadErrorsTotal
 import me.proton.core.drive.observability.domain.metrics.sdk.UploadErroringUsersTotal
 import me.proton.core.drive.observability.domain.metrics.sdk.UploadErrorsFileSizeHistogram
 import me.proton.core.drive.observability.domain.metrics.sdk.UploadErrorsTotal
@@ -37,7 +36,7 @@ import me.proton.core.drive.observability.domain.metrics.sdk.UploadErrorsTransfe
 import me.proton.core.drive.observability.domain.metrics.sdk.UploadSuccessRateTotal
 import me.proton.core.drive.observability.domain.usecase.EnqueueObservabilityEvent
 import me.proton.core.drive.user.domain.extension.isWithoutProtonSubscription
-import me.proton.core.util.kotlin.CoreLogger
+import me.proton.drive.sdk.telemetry.UploadError
 import me.proton.drive.sdk.telemetry.UploadEvent
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
@@ -53,26 +52,29 @@ class SdkUploadMetricsNotifier @Inject constructor(
     suspend operator fun invoke(uploadEvent: UploadEvent) {
         val volumeType = uploadEvent.volumeType.toVolumeType()
         val error = uploadEvent.error
-        if (error == null) {
+        if (error != UploadError.NETWORK_ERROR) {
             notifyUploadSuccessRateTotalMetric(
                 volumeType = volumeType,
-                isSuccess = true,
+                isSuccess = error == null,
             )
-        } else {
+        }
+        if (error != null) {
             val type = error.toType()
             if (type == UploadErrorsTotal.Type.unknown) {
                 reportError(
                     tag = DRIVE_SDK,
-                    message = "Unknown upload error: $error\n${uploadEvent.originalError}",
+                    message = "Unknown upload error: ${uploadEvent.originalError}",
                 )
             }
             notifyUploadErrorsTotalMetric(
                 volumeType = volumeType,
                 type = type
             )
-            notifyUploadErroringUsersTotalMetric(
-                volumeType = volumeType,
-            )
+            if (error != UploadError.NETWORK_ERROR) {
+                notifyUploadErroringUsersTotalMetric(
+                    volumeType = volumeType,
+                )
+            }
             notifyUploadErrorsTransferSizeHistogramMetric(
                 uploadedSize = uploadEvent.approximateUploadedSize
             )

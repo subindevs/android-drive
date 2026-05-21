@@ -52,7 +52,6 @@ import me.proton.core.drive.base.domain.entity.toFileTypeCategory
 import me.proton.core.drive.base.domain.extension.bytes
 import me.proton.core.drive.base.domain.extension.toPercentString
 import me.proton.core.drive.base.presentation.component.LinearProgressIndicator
-import me.proton.core.drive.base.presentation.component.text.TextWithMiddleEllipsis
 import me.proton.core.drive.base.presentation.extension.currentLocale
 import me.proton.core.drive.base.presentation.extension.iconResId
 import me.proton.core.drive.link.domain.entity.FolderId
@@ -142,10 +141,11 @@ fun DetailsTitle(
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true,
 ) {
-    TextWithMiddleEllipsis(
+    Text(
         text = title,
         style = ProtonTheme.typography.defaultWeak(enabled = isEnabled),
         maxLines = 1,
+        overflow = TextOverflow.MiddleEllipsis,
         modifier = modifier,
     )
 }

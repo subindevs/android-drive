@@ -19,6 +19,7 @@ package me.proton.core.drive.base.domain.usecase
 
 import me.proton.core.domain.entity.UserId
 import me.proton.core.drive.base.domain.log.LogTag.KEY
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.user.domain.UserManager
 import me.proton.core.user.domain.entity.AddressId
 import me.proton.core.user.domain.extension.primary
@@ -30,7 +31,7 @@ class GetUserEmail @Inject constructor(
     private val userManager: UserManager,
     private val reportError: ReportError,
 ) {
-    suspend operator fun invoke(userId: UserId): String =
+    suspend operator fun invoke(userId: UserId): Result<String> = coRunCatching {
         userManager.getUser(userId).email
             ?: userManager.getAddresses(userId).primary().let { userAddress ->
                 if (userAddress == null) {
@@ -44,9 +45,11 @@ class GetUserEmail @Inject constructor(
                     userAddress
                 }.email
             }
+    }
 
-    suspend operator fun invoke(userId: UserId, addressId: AddressId): String =
+    suspend operator fun invoke(userId: UserId, addressId: AddressId): Result<String> = coRunCatching {
         userManager.getAddresses(userId)
             .first { address -> address.addressId == addressId }
             .email
+    }
 }

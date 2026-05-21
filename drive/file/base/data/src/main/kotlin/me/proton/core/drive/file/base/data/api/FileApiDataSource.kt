@@ -33,8 +33,13 @@ import me.proton.core.drive.link.domain.extension.userId
 import me.proton.core.drive.share.domain.entity.ShareId
 import me.proton.core.drive.volume.domain.entity.VolumeId
 import me.proton.core.network.data.ApiProvider
+import me.proton.core.network.data.protonApi.ProtonErrorData
 import me.proton.core.network.domain.ApiException
+import me.proton.core.network.domain.ApiResult
+import me.proton.core.util.kotlin.deserializeOrNull
 import java.io.File
+import java.io.InputStream
+import kotlin.IllegalStateException
 
 class FileApiDataSource(
     private val apiProvider: ApiProvider,
@@ -124,10 +129,30 @@ class FileApiDataSource(
     suspend fun getFileStream(
         userId: UserId,
         url: String,
-    ) =
-        apiProvider.get<FileApi>(userId).invoke {
+    ): InputStream {
+        val response = apiProvider.get<FileApi>(userId).invoke {
             getFileStream(url)
-        }.valueOrThrow.body()?.byteStream() ?: error("Response body is null")
+        }.valueOrThrow
+        return if (response.isSuccessful) {
+            response.body()?.byteStream() ?: throw ApiException(
+                error = ApiResult.Error.Parse(
+                    IllegalStateException("Response body is null")
+                )
+            )
+        } else {
+            throw ApiException(
+                error = ApiResult.Error.Http(
+                    httpCode = response.code(),
+                    message = response.message(),
+                    proton = response.errorBody()?.byteString()?.utf8()
+                        ?.deserializeOrNull(ProtonErrorData.serializer())
+                        ?.apiResultData,
+                    cause = null,
+                    retryAfter = response.headers().retryAfter()
+                )
+            )
+        }
+    }
 
     @Throws(ApiException::class)
     suspend fun uploadFile(

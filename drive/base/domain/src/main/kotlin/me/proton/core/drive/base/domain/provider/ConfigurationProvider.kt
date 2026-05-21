@@ -38,6 +38,7 @@ interface ConfigurationProvider {
     val apiBlockPageSize: Int get() = 50
     val apiListingPageSize: Int get() = 500
     val dbPageSize: Int get() = 500
+    val dbListingPageSize: Int get() = 3000
     val cacheMaxEntries: Int get() = 10_000
     val linkMaxNameLength: Int get() = 255
     val blockMaxSize: Bytes get() = 4.MiB

@@ -21,26 +21,29 @@ package me.proton.core.drive.observability.domain.constraint
 import me.proton.core.domain.entity.UserId
 import me.proton.core.drive.base.domain.entity.TimestampMs
 import me.proton.core.drive.base.domain.extension.isOlderThen
+import me.proton.core.drive.base.domain.extension.plus
 import me.proton.core.drive.base.domain.repository.BaseRepository
 import javax.inject.Inject
 import kotlin.time.Duration
 
 
-class MinimumIntervalConstraint @Inject constructor(
-    private val repository: BaseRepository
+class MinimumIntervalConstraint(
+    private val repository: BaseRepository,
+    private val clock: () -> TimestampMs
 ) {
+    @Inject constructor(repository: BaseRepository): this(repository, ::TimestampMs)
 
     operator fun invoke(userId: UserId, schemaId: String, interval: Duration): Constraint = object : Constraint {
 
         override suspend fun isMet(): Boolean =
             repository
                 .getLastFetch(userId, schemaId)
-                ?.isOlderThen(interval)
+                ?.isOlderThen(interval, clock)
                 ?: true
 
         override suspend fun apply() {
             require(isMet()) { "Apply should be called only when constraint is met" }
-            repository.setLastFetch(userId, schemaId, TimestampMs())
+            repository.setLastFetch(userId, schemaId, clock())
         }
     }
 }

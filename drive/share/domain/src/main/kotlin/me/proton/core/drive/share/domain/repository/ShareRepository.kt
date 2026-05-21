@@ -25,6 +25,7 @@ import me.proton.core.drive.share.domain.entity.Share
 import me.proton.core.drive.share.domain.entity.ShareId
 import me.proton.core.drive.share.domain.entity.ShareInfo
 import me.proton.core.drive.share.domain.entity.ShareMembership
+import me.proton.core.drive.volume.domain.entity.Volume
 import me.proton.core.drive.volume.domain.entity.VolumeId
 
 interface ShareRepository {
@@ -104,4 +105,9 @@ interface ShareRepository {
     suspend fun getPermissions(shareIds: List<ShareId>): List<Permissions>
 
     fun getMembership(shareId: ShareId): Flow<DataResult<ShareMembership>>
+
+    /**
+     * Get the volume type for a given share, fetching from server if not cached
+     */
+    suspend fun getVolumeType(shareId: ShareId): Result<Volume.Type>
 }

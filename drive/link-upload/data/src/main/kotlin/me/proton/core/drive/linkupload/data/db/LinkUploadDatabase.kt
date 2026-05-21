@@ -239,5 +239,15 @@ interface LinkUploadDatabase : Database {
                 )
             }
         }
+
+        val MIGRATION_8 = object : DatabaseMigration {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(
+                    """
+                    CREATE INDEX IF NOT EXISTS `index_LinkUploadEntity_uri` ON `LinkUploadEntity` (`uri`)
+                    """.trimIndent()
+                )
+            }
+        }
     }
 }

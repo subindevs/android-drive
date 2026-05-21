@@ -27,6 +27,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.runBlocking
 import me.proton.core.domain.entity.UserId
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.featureflag.domain.FeatureFlagWorkerManager
 import me.proton.core.featureflag.domain.entity.FeatureFlag
 import me.proton.core.featureflag.domain.entity.FeatureId
@@ -71,7 +72,7 @@ class TestFeatureFlagWorkerManager @Inject constructor(
             val userId = featureFlag.userId
             val featureId = featureFlag.featureId
             val isEnabled = featureFlag.value
-            runCatching {
+            coRunCatching {
                 entryPoint.remoteDataSource.update(userId, featureId, isEnabled)
                 ListenableWorker.Result.success()
             }.getOrElse { error ->

@@ -29,7 +29,9 @@
   <string name="common_type">類型</string>
   <string name="common_yes">是</string>
   <string name="common_download">下載</string>
+  <string name="common_downloaded">已下載</string>
   <string name="common_downloading">正在下載</string>
+  <string name="common_waiting_for_download">正等待下載</string>
   <string name="common_link">連結</string>
   <string name="common_password">密碼</string>
   <string name="common_retry">重試</string>
@@ -61,6 +63,7 @@
   <string name="common_delete_permanently_action">永久刪除</string>
   <string name="common_make_available_offline_action">可在離線時使用</string>
   <string name="common_remove_from_offline_available_action">從離線可用中移除</string>
+  <string name="common_remove_all_from_offline_available_action">Remove all from offline available</string>
   <string name="common_get_link_action">取得連結</string>
   <string name="common_manage_link_action">管理連結</string>
   <string name="common_manage_access_action">管理存取權限</string>
@@ -79,6 +82,8 @@
   <string name="common_tag_photo_action">掃描相片是否有標籤</string>
   <string name="common_save_as_action">儲存為</string>
   <string name="common_open_action">Open</string>
+  <string name="common_back_action">Back</string>
+  <string name="common_open_side_menu_action">Open side menu</string>
   <!-- endregion -->
   <!-- region Common file types -->
   <string name="common_type_audio">音訊</string>

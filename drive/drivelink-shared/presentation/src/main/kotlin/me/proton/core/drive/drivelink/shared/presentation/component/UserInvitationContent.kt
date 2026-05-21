@@ -42,6 +42,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import me.proton.core.compose.component.ProtonSecondaryButton
 import me.proton.core.compose.component.ProtonSolidButton
@@ -61,7 +62,6 @@ import me.proton.core.drive.base.domain.entity.toFileTypeCategory
 import me.proton.core.drive.base.presentation.R
 import me.proton.core.drive.base.presentation.component.EncryptedItem
 import me.proton.core.drive.base.presentation.component.LetterBadge
-import me.proton.core.drive.base.presentation.component.text.TextWithMiddleEllipsis
 import me.proton.core.drive.base.presentation.extension.asHumanReadableString
 import me.proton.core.drive.base.presentation.extension.iconResId
 import me.proton.core.drive.base.presentation.extension.protonNotificationSuccessButtonColors
@@ -145,9 +145,11 @@ fun UserInvitationItem(
                     .weight(1f)
             ) {
                 if (details?.cryptoName is CryptoProperty.Decrypted) {
-                    TextWithMiddleEllipsis(
+                    Text(
                         text = details.cryptoName.value,
                         style = ProtonTheme.typography.defaultNorm,
+                        maxLines = 1,
+                        overflow = TextOverflow.MiddleEllipsis,
                     )
                 } else {
                     EncryptedItem()

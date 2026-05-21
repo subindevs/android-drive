@@ -63,6 +63,9 @@
   <string name="files_confirm_empty_trash_title">გავასუფთაო ნაგვის ყუთი?</string>
   <string name="files_confirm_empty_trash_message">ნაგვის ყუთში გადაყრილი ელემენტები სამუდამოდ წაიშლება. ამ ქმედებას ვერ დააბრუნებთ.</string>
   <string name="files_confirm_empty_trash_confirm_action">ნაგვის ყუთის დაცარიელება</string>
+  <string name="files_confirm_remove_all_offline_title">წავშალო ყველაფერი ქსელის გარეშე?</string>
+  <string name="files_confirm_remove_all_offline_message">ფაილი ქსელის გარეშე ხელმისაწვდომი აღარაა.</string>
+  <string name="files_confirm_remove_all_offline_confirm_action">ყველაფრის წაშლა</string>
   <string name="files_display_file_info_action">ფაილის დეტალები</string>
   <string name="files_display_folder_info_action">საქაღალდის დეტალები</string>
 </resources>

@@ -43,6 +43,7 @@ import me.proton.core.drive.base.domain.api.ProtonApiCode
 import me.proton.core.drive.base.domain.extension.onProtonHttpException
 import me.proton.core.drive.base.domain.provider.ConfigurationProvider
 import me.proton.core.drive.base.domain.usecase.BroadcastMessages
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.block.domain.entity.UploadBlocksUrl
 import me.proton.core.drive.file.base.domain.entity.Block
 import me.proton.core.drive.linkupload.domain.entity.NetworkTypeProviderType
@@ -146,7 +147,7 @@ class GetBlocksUploadUrlWorker @AssistedInject constructor(
     private suspend fun uploadBlocks(
         uploadBlocksUrl: UploadBlocksUrl,
         uploadFileLink: UploadFileLink,
-    ) = runCatching{
+    ) = coRunCatching{
         uploadFileLink.logWorkState("enqueueing worker")
         val uploadTag = listOf(uploadFileLinkId.uniqueUploadWorkName)
         val networkType =

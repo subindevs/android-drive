@@ -18,26 +18,18 @@
 
 package me.proton.core.drive.drivelink.domain.usecase
 
-import kotlinx.coroutines.flow.flowOf
-import me.proton.core.drive.base.domain.extension.toResult
-import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.drivelink.domain.entity.DriveLink
 import me.proton.core.drive.link.domain.entity.LinkId
-import me.proton.core.drive.share.domain.usecase.GetShare
+import me.proton.core.drive.share.domain.repository.ShareRepository
 import javax.inject.Inject
+import javax.inject.Singleton
 
 class GetVolumeType @Inject constructor(
-    private val getShare: GetShare,
+    private val shareRepository: ShareRepository,
 ) {
-    suspend operator fun invoke(linkId: LinkId) = coRunCatching {
-        getShare(linkId.shareId)
-            .toResult().getOrThrow().volumeType
-            ?: getShare(linkId.shareId, refresh = flowOf(true))
-                .toResult().getOrThrow().volumeType
-            ?: error("Cannot found volume type for ${linkId.id}")
-    }
+    suspend operator fun invoke(linkId: LinkId) =
+        shareRepository.getVolumeType(linkId.shareId)
 
-    suspend operator fun invoke(driveLink: DriveLink) = coRunCatching {
-        invoke(driveLink.id).getOrThrow()
-    }
+    suspend operator fun invoke(driveLink: DriveLink) =
+        invoke(driveLink.id)
 }

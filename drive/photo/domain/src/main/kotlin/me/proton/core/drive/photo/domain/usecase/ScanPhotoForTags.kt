@@ -19,6 +19,7 @@
 package me.proton.core.drive.photo.domain.usecase
 
 import me.proton.core.drive.base.domain.log.LogTag.PHOTO
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.link.domain.entity.Link
 import me.proton.core.drive.photo.domain.entity.TagsMigrationFile
 import me.proton.core.drive.photo.domain.manager.PhotoTagWorkManager
@@ -30,7 +31,7 @@ class ScanPhotoForTags @Inject constructor(
     private val insertTagsMigrationFiles: InsertTagsMigrationFiles,
     private val photoTagWorkManager: PhotoTagWorkManager,
 ) {
-    suspend operator fun invoke(volumeId: VolumeId, files: List<Link.File>) = runCatching {
+    suspend operator fun invoke(volumeId: VolumeId, files: List<Link.File>) = coRunCatching {
         val tagsMigrationFiles = files.mapNotNull { file ->
             file.photoCaptureTime?.let { photoCaptureTime ->
                 TagsMigrationFile(

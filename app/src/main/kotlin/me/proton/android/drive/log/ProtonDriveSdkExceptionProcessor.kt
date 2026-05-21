@@ -42,6 +42,12 @@ class ProtonDriveSdkExceptionProcessor : EventProcessor {
         error?.let { error ->
             event.setTag("sdk_error_type", error.type)
             event.setTag("sdk_error_domain", error.domain.toString())
+            error.primaryCode?.let { code ->
+                event.setTag("sdk_error_primary_code", code.toString())
+            }
+            error.secondaryCode?.let { code ->
+                event.setTag("sdk_error_secondary_code", code.toString())
+            }
             hint.addAttachment(
                 Attachment(
                     errorToString().toByteArray(),

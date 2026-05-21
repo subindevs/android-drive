@@ -25,6 +25,7 @@ import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.ElementsIntoSet
 import dagger.multibindings.IntoMap
 import dagger.multibindings.StringKey
+import me.proton.android.drive.photos.data.provider.ExifTagsProvider
 import me.proton.android.drive.photos.data.provider.FileNameTagsProvider
 import me.proton.android.drive.photos.data.provider.MimetypeTagsProvider
 import me.proton.android.drive.photos.data.provider.ParentNameTagsProvider
@@ -61,11 +62,13 @@ object PhotosModule {
         parentName: ParentNameTagsProvider,
         ratio: RatioTagsProvider,
         xmp: XmpTagsProvider,
+        exif: ExifTagsProvider,
     ): Set<TagsProvider> = setOf(
         fileName,
         mimetype,
         parentName,
         ratio,
         xmp,
+        exif,
     )
 }

@@ -29,6 +29,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import me.proton.core.drive.base.data.extension.log
 import me.proton.core.drive.base.domain.log.LogTag
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.messagequeue.domain.MessageQueue
 import java.io.Serializable
 
@@ -51,7 +52,7 @@ class MessageQueueImpl<T : Serializable>(
     override fun enqueue(message: T) {
         scope.launch {
             mutex.withLock {
-                runCatching {
+                coRunCatching {
                     val subscribers = mutableSharedFlow.subscriptionCount.firstOrNull() ?: 0
                     if (subscribers > 0) {
                         mutableSharedFlow.emit(message)

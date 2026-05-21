@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,19 +37,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import me.proton.core.compose.component.bottomsheet.BottomSheetContent
 import me.proton.core.compose.component.bottomsheet.BottomSheetEntry
 import me.proton.core.compose.theme.ProtonDimens
 import me.proton.core.compose.theme.ProtonTheme
-import me.proton.core.compose.theme.defaultSmallStrong
+import me.proton.core.compose.theme.defaultSmallStrongNorm
 import me.proton.core.crypto.common.pgp.VerificationStatus
 import me.proton.core.domain.entity.UserId
 import me.proton.core.drive.base.domain.entity.CryptoProperty
 import me.proton.core.drive.base.domain.entity.TimestampS
 import me.proton.core.drive.base.presentation.component.EncryptedItem
-import me.proton.core.drive.base.presentation.component.text.TextWithMiddleEllipsis
 import me.proton.core.drive.device.domain.entity.Device
 import me.proton.core.drive.device.domain.entity.DeviceId
 import me.proton.core.drive.device.domain.extension.isNameEncrypted
@@ -128,10 +129,11 @@ internal fun OptionsHeader(
                 if (isEncrypted) {
                     EncryptedItem()
                 } else {
-                    TextWithMiddleEllipsis(
+                    Text(
                         text = title,
-                        style = ProtonTheme.typography.defaultSmallStrong,
+                        style = ProtonTheme.typography.defaultSmallStrongNorm,
                         maxLines = 1,
+                        overflow = TextOverflow.MiddleEllipsis,
                     )
                 }
             }

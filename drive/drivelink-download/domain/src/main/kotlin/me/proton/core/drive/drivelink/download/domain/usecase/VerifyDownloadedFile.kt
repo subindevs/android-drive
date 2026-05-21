@@ -41,11 +41,21 @@ class VerifyDownloadedFile @Inject constructor(
         driveLink: DriveLink.File,
         file: File,
     ): Result<Unit> = coRunCatching {
-        verifyContentDigest(
+        invoke(
             claimed = getContentDigest(driveLink).getOrNull(
                 tag = LogTag.DOWNLOAD,
                 message = "Failed to get content digest",
             ).orEmpty(),
+            file = file,
+        ).getOrThrow()
+    }
+
+    suspend operator fun invoke(
+        claimed: String,
+        file: File,
+    ): Result<Unit> = coRunCatching {
+        verifyContentDigest(
+            claimed = claimed,
             file = file,
         ).getOrThrow()
     }

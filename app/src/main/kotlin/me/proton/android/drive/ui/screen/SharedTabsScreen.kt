@@ -36,7 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import me.proton.android.drive.ui.effect.HandleHomeEffect
 import me.proton.android.drive.ui.viewevent.SharedTabsViewEvent
@@ -68,7 +68,7 @@ fun SharedTabsScreen(
         viewModel.viewEvent()
     }
     viewModel.HandleHomeEffect(homeScaffoldState)
-    LaunchedEffect(viewState) {
+    LaunchedEffect(Unit) {
         homeScaffoldState.topAppBar.value = {
             TopAppBar(
                 titleResId = viewState.titleResId,

@@ -23,6 +23,7 @@ import android.security.keystore.KeyProperties
 import me.proton.core.drive.base.data.entity.LoggerLevel
 import me.proton.core.drive.base.data.extension.log
 import me.proton.core.drive.base.domain.log.LogTag
+import me.proton.core.drive.base.domain.util.coRunCatching
 import java.security.KeyStore
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
@@ -126,7 +127,7 @@ fun SecretKeyProperties.getInitializedCipherForEncryption(
 private fun getCipher(transformation: String): Cipher = Cipher.getInstance(transformation)
 
 fun removeKey(keyProperties: SecretKeyProperties) {
-    runCatching {
+    coRunCatching {
         KeyStore.getInstance(keyProperties.keyStoreType).run {
             load(null)
             deleteEntry(keyProperties.keyAlias)

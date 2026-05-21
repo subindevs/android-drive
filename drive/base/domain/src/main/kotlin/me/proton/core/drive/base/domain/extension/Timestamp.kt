@@ -24,8 +24,13 @@ import me.proton.core.drive.base.domain.entity.toTimestampMs
 import java.time.Instant
 import kotlin.time.Duration
 
-fun TimestampMs?.isOlderThen(duration: Duration): Boolean = this?.let { timestamp ->
-    (timestamp.value + duration.inWholeMilliseconds) < System.currentTimeMillis()
+operator fun TimestampMs.plus(duration: Duration) = TimestampMs(this.value + duration.inWholeMilliseconds)
+
+fun TimestampMs?.isOlderThen(
+    duration: Duration,
+    clock: () -> TimestampMs = { TimestampMs(System.currentTimeMillis()) }
+): Boolean = this?.let { timestamp ->
+    (timestamp + duration) < clock()
 } ?: true
 
 fun TimestampS?.isOlderThen(duration: Duration): Boolean = this?.toTimestampMs().isOlderThen(duration)

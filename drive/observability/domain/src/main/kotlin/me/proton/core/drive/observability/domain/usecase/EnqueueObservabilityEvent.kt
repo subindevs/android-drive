@@ -18,6 +18,7 @@
 
 package me.proton.core.drive.observability.domain.usecase
 
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.observability.domain.constraint.Constraint
 import me.proton.core.drive.observability.domain.constraint.NoConstraint
 import me.proton.core.observability.domain.ObservabilityManager
@@ -35,7 +36,7 @@ class EnqueueObservabilityEvent @Inject constructor(
         observabilityData: ObservabilityData,
         timestamp: Instant = Instant.now(),
         constraint: Constraint = NoConstraint(),
-    ) = runCatching {
+    ) = coRunCatching {
         if (constraint.isMet()) {
             manager.enqueue(
                 ObservabilityEvent(

@@ -31,4 +31,5 @@ driveModule(
     api(project(":drive:base:presentation"))
     api(project(":drive:contact:domain"))
     api(libs.core.presentation.compose)
+    api(libs.androidx.compose.material.icons.extended)
 }

@@ -20,6 +20,7 @@ package me.proton.core.drive.telemetry.domain.interceptor
 
 import me.proton.core.domain.entity.UserId
 import me.proton.core.drive.base.domain.log.LogTag.TELEMETRY
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.telemetry.domain.entity.DriveTelemetryEvent
 import me.proton.core.drive.telemetry.domain.manager.DriveTelemetryInterceptor
 import me.proton.core.user.domain.extension.hasSubscription
@@ -33,7 +34,7 @@ class PlanDimensionInterceptor @Inject constructor(
     override suspend fun invoke(
         userId: UserId,
         event: DriveTelemetryEvent,
-    ): DriveTelemetryEvent = runCatching {
+    ): DriveTelemetryEvent = coRunCatching {
         getUser(userId, false)
     }.fold(
         onSuccess = { user ->

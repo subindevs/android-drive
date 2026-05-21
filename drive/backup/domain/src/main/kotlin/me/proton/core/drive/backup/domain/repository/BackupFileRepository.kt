@@ -19,6 +19,7 @@
 package me.proton.core.drive.backup.domain.repository
 
 import kotlinx.coroutines.flow.Flow
+import me.proton.core.domain.entity.UserId
 import me.proton.core.drive.backup.domain.entity.BackupFile
 import me.proton.core.drive.backup.domain.entity.BackupFileState
 import me.proton.core.drive.backup.domain.entity.BackupFolder
@@ -86,4 +87,5 @@ interface BackupFileRepository {
     suspend fun deleteFailedForFolderId(folderId: FolderId)
     suspend fun isBackupCompleteForFolder(backupFolder: BackupFolder): Boolean
     suspend fun getStatsForFolder(backupFolder: BackupFolder): List<BackupStateCount>
+    suspend fun markOrphanedEnqueuedFilesAsFailed(userId: UserId): Int
 }

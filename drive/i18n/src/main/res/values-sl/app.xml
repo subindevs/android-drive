@@ -165,10 +165,10 @@
             "Downloading 3 files"
     -->
   <plurals name="notification_content_text_download_downloading">
-    <item quantity="one">Downloading %1$d file</item>
-    <item quantity="two">Downloading %1$d files</item>
-    <item quantity="few">Downloading %1$d files</item>
-    <item quantity="other">Downloading %1$d files</item>
+    <item quantity="one">Prenašam %1$d datoteko</item>
+    <item quantity="two">Prenašam %1$d datoteki</item>
+    <item quantity="few">Prenašam %1$d datoteke</item>
+    <item quantity="other">Prenašam %1$d datotek</item>
   </plurals>
   <string name="notification_content_title_download_complete">Prenos končan</string>
   <string name="notification_content_title_forced_sign_out">Prosimo prijavite se</string>

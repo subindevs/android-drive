@@ -30,6 +30,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -54,6 +55,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import me.proton.android.drive.BuildConfig
 import me.proton.android.drive.extension.getDefaultMessage
 import me.proton.android.drive.extension.log
@@ -75,6 +77,7 @@ import me.proton.core.drive.base.domain.entity.toFileTypeCategory
 import me.proton.core.drive.base.domain.extension.bytes
 import me.proton.core.drive.base.domain.extension.filterSuccessOrError
 import me.proton.core.drive.base.domain.extension.getOrNull
+import me.proton.core.drive.base.domain.function.pagedKeyList
 import me.proton.core.drive.base.domain.function.pagedList
 import me.proton.core.drive.base.domain.log.LogTag
 import me.proton.core.drive.base.domain.log.LogTag.VIEW_MODEL
@@ -781,7 +784,7 @@ class PhotoContentProvider(
         .mapSuccessValueOrNull()
         .stateIn(coroutineScope, SharingStarted.Eagerly, null)
 
-    private val photoListings: StateFlow<List<PhotoListing>> = photoShare
+    private val photoListings: StateFlow<List<PhotoListing>?> = photoShare
         .filterNotNull()
         .distinctUntilChanged()
         .transform { photoShare ->
@@ -790,14 +793,14 @@ class PhotoContentProvider(
                     .distinctUntilChanged()
                     .transformLatest {
                         emit(
-                            pagedList(
-                                pageSize = configurationProvider.dbPageSize,
-                            ) { fromIndex, count ->
+                            pagedKeyList(
+                                pageSize = configurationProvider.dbListingPageSize,
+                            ) { lastPhotoListing: PhotoListing?, count: Int ->
                                 photoRepository.getPhotoListings(
                                     userId = userId,
                                     volumeId = photoShare.volumeId,
-                                    fromIndex = fromIndex,
                                     count = count,
+                                    lastPhotoListing = lastPhotoListing,
                                     tag = photoTag,
                                 )
                             }
@@ -805,18 +808,20 @@ class PhotoContentProvider(
                     }
             )
         }
-        .stateIn(coroutineScope, SharingStarted.Eagerly, emptyList())
+        .stateIn(coroutineScope, SharingStarted.Eagerly, null)
 
     override fun getDriveLinks(fileId: FileId): Flow<List<DriveLink.File>> = combine(
         photoShare.filterNotNull(),
         getDecryptedDriveLink(fileId).filterSuccessOrError().mapSuccessValueOrNull(),
-        photoListings,
+        photoListings.filterNotNull(),
     ) { photoShare, driveLink, photoListings ->
-        photoListings.map { photoListing ->
-            if (photoListing.linkId == driveLink?.id) {
-                driveLink
-            } else {
-                photoListing.placeholderDriveLink(photoShare)
+        withContext(Dispatchers.IO) {
+            photoListings.map { photoListing ->
+                if (photoListing.linkId == driveLink?.id) {
+                    driveLink
+                } else {
+                    photoListing.placeholderDriveLink(photoShare)
+                }
             }
         }
     }

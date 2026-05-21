@@ -19,26 +19,13 @@
 package me.proton.android.drive.document.scanner.domain.usecase
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import me.proton.android.drive.document.scanner.domain.provider.DocumentScannerProvider
 import me.proton.core.domain.entity.UserId
-import me.proton.core.drive.feature.flag.domain.entity.FeatureFlagId.Companion.driveAndroidDocumentScanner
-import me.proton.core.drive.feature.flag.domain.extension.on
-import me.proton.core.drive.feature.flag.domain.usecase.GetFeatureFlagFlow
 import javax.inject.Inject
 
 class IsScannerAvailable @Inject constructor(
     private val documentScannerProvider: DocumentScannerProvider,
-    private val getFeatureFlagFlow: GetFeatureFlagFlow,
 ) {
 
-    operator fun invoke(userId: UserId): Flow<Boolean> = combine(
-        documentScannerProvider.available,
-        getFeatureFlagFlow(
-            featureFlagId = driveAndroidDocumentScanner(userId),
-            emitNotFoundInitially = false,
-        )
-    ) { isAvailable, documentScannerFeatureFlag ->
-        isAvailable && documentScannerFeatureFlag.on
-    }
+    operator fun invoke(userId: UserId): Flow<Boolean> = documentScannerProvider.available
 }

@@ -51,7 +51,7 @@ class BuildShareKey @Inject constructor(
                 key = share.nestedPrivateKey,
                 verifySignatureKey = getPublicAddressKeys(
                     userId = userId,
-                    email = getSignatureAddress(userId, addressId),
+                    email = getSignatureAddress(userId, addressId).getOrThrow(),
                 ).getOrThrow().keyHolder,
                 allowCompromisedVerificationKeys = true,
             ).getOrThrow()

@@ -63,6 +63,9 @@
   <string name="files_confirm_empty_trash_title">Tøm papirkurven?</string>
   <string name="files_confirm_empty_trash_message">Elementer i papirkurven vil bli slettet permanent. Dette kan ikke angres.</string>
   <string name="files_confirm_empty_trash_confirm_action">Tøm papirkurven</string>
+  <string name="files_confirm_remove_all_offline_title">Fjerne alle tilgjengelige frakoblet?</string>
+  <string name="files_confirm_remove_all_offline_message">Filer vil ikke lenger være tilgjengelige frakoblet.</string>
+  <string name="files_confirm_remove_all_offline_confirm_action">Fjern alle</string>
   <string name="files_display_file_info_action">Fildetaljer</string>
   <string name="files_display_folder_info_action">Mappedetaljer</string>
 </resources>

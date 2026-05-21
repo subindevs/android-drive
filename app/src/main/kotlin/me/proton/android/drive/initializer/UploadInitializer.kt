@@ -44,6 +44,9 @@ import me.proton.core.domain.entity.UserId
 import me.proton.core.drive.base.data.extension.hasConnectivity
 import me.proton.core.drive.base.domain.log.LogTag
 import me.proton.core.drive.base.domain.log.LogTag.TRACKING
+import me.proton.core.drive.base.domain.util.coRunCatching
+import me.proton.core.drive.drivelink.domain.usecase.UseSdkForUpload
+import me.proton.core.drive.linkupload.domain.extension.fileId
 import me.proton.core.drive.linkupload.domain.manager.UploadSpeedManager
 import me.proton.core.drive.linkupload.domain.usecase.GetUploadFileLinksCount
 import me.proton.core.drive.upload.data.exception.UploadWorkerException
@@ -80,11 +83,14 @@ class UploadInitializer : Initializer<Unit> {
                         CoroutineScope(Dispatchers.IO + Job())
                     }
                     uploadErrorManager.errors
-                        .map { uploadError -> context.hasNotConnectivity(uploadError) }
-                        .onEach { noConnectivity ->
+                        .map { uploadError -> uploadError.uploadFileLink.fileId to context.hasNotConnectivity(uploadError) }
+                        .onEach { (fileId, noConnectivity) ->
                             if (noConnectivity && uploadSpeedManager.isRunning()) {
                                 CoreLogger.v(TRACKING, "Pausing, no network to upload")
-                                uploadSpeedManager.pause(userId)
+                                val usedSdk = fileId?.let {
+                                    useSdkForUpload(fileId).getOrElse { false }
+                                } ?: false
+                                uploadSpeedManager.pause(userId, usedSdk)
                             }
                         }
                         .launchIn(scope)
@@ -130,7 +136,7 @@ class UploadInitializer : Initializer<Unit> {
 
     private suspend fun UploadInitializerEntryPoint.handleUploadError(uploadError: UploadErrorManager.Error) {
         uploadErrorHandlers.forEach { uploadErrorHandler ->
-            runCatching {
+            coRunCatching {
                 uploadErrorHandler.onError(uploadError)
             }.onFailure { error ->
                 error.log(LogTag.UPLOAD, "Failed to handle upload error")
@@ -147,5 +153,6 @@ class UploadInitializer : Initializer<Unit> {
         val getUploadFileLinksCount: GetUploadFileLinksCount
         val uploadSpeedManager: UploadSpeedManager
         val accountManager: AccountManager
+        val useSdkForUpload: UseSdkForUpload
     }
 }

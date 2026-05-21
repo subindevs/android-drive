@@ -31,7 +31,7 @@ class DeleteDownloadedBlocks @Inject constructor(
 ) {
     suspend operator fun invoke(driveLink: DriveLink.File) = coRunCatching {
         getDownloadBlocks(driveLink.link).getOrThrow().forEach { block ->
-            runCatching {
+            coRunCatching {
                 File(block.url).delete()
             }.getOrNull(LogTag.DOWNLOAD, "Cannot delete file: ${block.url}")
         }

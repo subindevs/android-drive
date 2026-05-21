@@ -155,8 +155,8 @@
             "Downloading 3 files"
     -->
   <plurals name="notification_content_text_download_downloading">
-    <item quantity="one">Downloading %1$d file</item>
-    <item quantity="other">Downloading %1$d files</item>
+    <item quantity="one">Laster ned %1$d fil</item>
+    <item quantity="other">Laster ned %1$d filer</item>
   </plurals>
   <string name="notification_content_title_download_complete">Nedlasting fullført</string>
   <string name="notification_content_title_forced_sign_out">Logg på</string>

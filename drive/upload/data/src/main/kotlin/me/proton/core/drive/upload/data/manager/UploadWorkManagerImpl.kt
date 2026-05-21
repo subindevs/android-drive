@@ -163,12 +163,13 @@ class UploadWorkManagerImpl @Inject constructor(
         showFilesBeingUploaded: Boolean,
     ) {
         workManager.enqueueUniqueWork(
-            uploadBulk.userId.uniqueUploadBulkWorkName,
+            folder.id.uniqueUploadBulkWorkName,
             ExistingWorkPolicy.APPEND_OR_REPLACE,
             CreateUploadFileLinkWorker.getWorkRequest(
-                uploadBulk,
-                folder.name,
-                showFilesBeingUploaded,
+                uploadBulk = uploadBulk,
+                folderName = folder.name,
+                showFilesBeingUploaded = showFilesBeingUploaded,
+                tags = listOf(uploadBulk.userId.uniqueUploadBulkTag),
             ),
         )
         if (showPreparingUpload) {
@@ -211,7 +212,7 @@ class UploadWorkManagerImpl @Inject constructor(
 
     override suspend fun cancelAll(userId: UserId) = withContext(Job() + Dispatchers.IO) {
         workManager.cancelUniqueWork(userId.uniqueUploadEventWorkName).await()
-        workManager.cancelUniqueWork(userId.uniqueUploadBulkWorkName).await()
+        workManager.cancelAllByTag(userId.uniqueUploadBulkTag)
         removeAllUploadFileLinks(userId, UploadState.UNPROCESSED)
         getUploadFileLinks(userId).forEach { uploadFileLink ->
             cancel(uploadFileLink)
@@ -232,7 +233,7 @@ class UploadWorkManagerImpl @Inject constructor(
     }
 
     override suspend fun cancelAllByShare(userId: UserId, shareId: ShareId) {
-        workManager.cancelUniqueWork(userId.uniqueUploadBulkWorkName).await()
+        workManager.cancelAllByTag(userId.uniqueUploadBulkTag)
         removeAllUploadFileLinks(userId, shareId, UploadState.UNPROCESSED)
         getUploadFileLinks(userId, shareId).forEach { uploadFileLink ->
             cancel(uploadFileLink)
@@ -240,7 +241,7 @@ class UploadWorkManagerImpl @Inject constructor(
     }
 
     override suspend fun cancelAllByFolder(userId: UserId, folderId: FolderId) {
-        workManager.cancelUniqueWork(userId.uniqueUploadBulkWorkName).await()
+        workManager.cancelUniqueWork(folderId.uniqueUploadBulkWorkName).await()
         removeAllUploadFileLinks(userId, folderId, UploadState.UNPROCESSED)
         getUploadFileLinks(userId, folderId).forEach { uploadFileLink ->
             cancel(uploadFileLink)
@@ -248,7 +249,6 @@ class UploadWorkManagerImpl @Inject constructor(
     }
 
     override suspend fun cancelAllByFolderAndUris(folderId: FolderId, uriStrings: List<String>) {
-        workManager.cancelUniqueWork(folderId.userId.uniqueUploadBulkWorkName).await()
         removeAllUploadFileLinks(folderId, uriStrings, UploadState.UNPROCESSED)
         getUploadFileLinks(folderId, uriStrings).forEach { uploadFileLink ->
             cancel(uploadFileLink)
@@ -330,7 +330,8 @@ class UploadWorkManagerImpl @Inject constructor(
 
 internal val UserId.uniqueUploadEventWorkName: String get() = "upload_notification_event=$id"
 internal val UserId.uniqueUploadThrottleWorkName: String get() = "upload_throttle=$id"
-internal val UserId.uniqueUploadBulkWorkName: String get() = "upload_bulk=$id"
+internal val UserId.uniqueUploadBulkTag: String get() = "upload_bulk=$id"
+internal val FolderId.uniqueUploadBulkWorkName: String get() = "upload_bulk_folder=$id"
 
 internal suspend fun WorkManager.enqueueUpload(
     userId: UserId,
@@ -354,4 +355,9 @@ internal suspend fun WorkManager.enqueueUpload(
         ExistingWorkPolicy.KEEP,
         UploadThrottleWorker.getWorkRequest(userId, tags.toList())
     ).await()
+}
+
+internal suspend fun WorkManager.cancelAllByTag(tag: String) {
+    getWorkInfosByTagFlow(tag).first()
+        .forEach { workInfo -> cancelWorkById(workInfo.id).await() }
 }

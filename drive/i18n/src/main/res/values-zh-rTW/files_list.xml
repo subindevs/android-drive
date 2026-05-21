@@ -62,6 +62,9 @@
   <string name="files_confirm_empty_trash_title">清空垃圾桶？</string>
   <string name="files_confirm_empty_trash_message">垃圾桶中的項目將會被永久刪除。您無法還原此動作。</string>
   <string name="files_confirm_empty_trash_confirm_action">清空垃圾桶</string>
+  <string name="files_confirm_remove_all_offline_title">Remove all from offline?</string>
+  <string name="files_confirm_remove_all_offline_message">Files will no longer be available offline.</string>
+  <string name="files_confirm_remove_all_offline_confirm_action">Remove all</string>
   <string name="files_display_file_info_action">檔案詳細資訊</string>
   <string name="files_display_folder_info_action">資料夾詳細資訊</string>
 </resources>

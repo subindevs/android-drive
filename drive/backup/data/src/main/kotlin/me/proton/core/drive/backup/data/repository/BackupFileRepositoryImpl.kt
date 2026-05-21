@@ -21,6 +21,7 @@ package me.proton.core.drive.backup.data.repository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import me.proton.core.domain.entity.UserId
 import me.proton.core.drive.backup.data.db.BackupDatabase
 import me.proton.core.drive.backup.data.extension.toBackupFile
 import me.proton.core.drive.backup.data.extension.toBackupStateCount
@@ -337,5 +338,8 @@ class BackupFileRepositoryImpl @Inject constructor(
             backupFolder.bucketId,
         ).map { entity -> entity.toBackupStateCount() }
     }
+
+    override suspend fun markOrphanedEnqueuedFilesAsFailed(userId: UserId): Int =
+        db.backupFileDao.markOrphanedEnqueuedFilesAsFailed(userId)
 
 }

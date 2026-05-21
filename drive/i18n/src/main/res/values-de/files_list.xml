@@ -63,6 +63,9 @@
   <string name="files_confirm_empty_trash_title">Papierkorb leeren?</string>
   <string name="files_confirm_empty_trash_message">Elemente im Papierkorb werden dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.</string>
   <string name="files_confirm_empty_trash_confirm_action">Papierkorb leeren</string>
+  <string name="files_confirm_remove_all_offline_title">Alle aus dem Offline-Modus entfernen?</string>
+  <string name="files_confirm_remove_all_offline_message">Dateien werden nicht länger offline verfügbar sein</string>
+  <string name="files_confirm_remove_all_offline_confirm_action">Alle entfernen</string>
   <string name="files_display_file_info_action">Dateidetails</string>
   <string name="files_display_folder_info_action">Ordnerdetails</string>
 </resources>

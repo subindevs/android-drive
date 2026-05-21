@@ -18,6 +18,8 @@
 package me.proton.core.drive.base.domain.usecase
 
 import me.proton.core.domain.entity.UserId
+import me.proton.core.drive.base.domain.util.coRunCatching
+import me.proton.core.user.domain.entity.AddressId
 import me.proton.core.user.domain.repository.UserAddressRepository
 import javax.inject.Inject
 
@@ -25,9 +27,11 @@ class GetAddressId @Inject constructor(
     private val userAddressRepository: UserAddressRepository,
     private val getUserEmail: GetUserEmail,
 ) {
-    suspend operator fun invoke(userId: UserId) = getUserEmail(userId).let { userEmail ->
-        userAddressRepository.getAddresses(userId)
-            .first { address -> address.email == userEmail }
-            .addressId
+    suspend operator fun invoke(userId: UserId): Result<AddressId> = coRunCatching {
+        getUserEmail(userId).getOrThrow().let { userEmail ->
+            userAddressRepository.getAddresses(userId)
+                .first { address -> address.email == userEmail }
+                .addressId
+        }
     }
 }

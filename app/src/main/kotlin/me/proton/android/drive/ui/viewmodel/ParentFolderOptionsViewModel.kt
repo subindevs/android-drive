@@ -128,8 +128,6 @@ class ParentFolderOptionsViewModel @Inject constructor(
         .stateIn(viewModelScope, Eagerly, FeatureFlag(FeatureFlagId.docsSheetsEnabled(userId), NOT_FOUND))
     private val createSheetOnMobileFeatureFlag = getFeatureFlagFlow(FeatureFlagId.docsCreateNewSheetOnMobileEnabled(userId))
         .stateIn(viewModelScope, Eagerly, FeatureFlag(FeatureFlagId.docsCreateNewSheetOnMobileEnabled(userId), NOT_FOUND))
-    private val uploadFolderFeatureFlag = getFeatureFlagFlow(FeatureFlagId.driveAndroidUploadFolder(userId))
-        .stateIn(viewModelScope, Eagerly, FeatureFlag(FeatureFlagId.driveAndroidUploadFolder(userId), NOT_FOUND))
     private val scanDocumentNotificationDotViewModel = ScanDocumentNotificationDotViewModel(
         userId = userId,
         getUserDataStore = getUserDataStore,
@@ -150,14 +148,12 @@ class ParentFolderOptionsViewModel @Inject constructor(
         sheetsKillSwitch,
         sheetsFeatureFlag,
         createSheetOnMobileFeatureFlag,
-        uploadFolderFeatureFlag,
         scanDocumentNotificationDotViewModel.notificationDotRequested,
         isScannerAvailable(userId)
-    ) { folder, _, _, _, uploadFolder, scanDocumentNotificationDotRequested, isScannerAvailable ->
+    ) { folder, _, _, _, scanDocumentNotificationDotRequested, isScannerAvailable ->
         options
             .filter(folder)
             .filterProtonSheets(isProtonSheetsEnabled)
-            .filterUploadFolder(uploadFolder.on)
             .filterScanDocument(isScannerAvailable)
             .map { option ->
                 when (option) {
@@ -359,14 +355,6 @@ class ParentFolderOptionsViewModel @Inject constructor(
 
     private val isProtonSheetsEnabled: Boolean get() =
         sheetsFeatureFlag.value.on && createSheetOnMobileFeatureFlag.value.on && sheetsKillSwitch.value.off
-
-    private fun Iterable<Option>.filterUploadFolder(isUploadFolderEnabled: Boolean): List<Option> =
-        filter { option ->
-            when (option) {
-                is Option.UploadFolder -> isUploadFolderEnabled
-                else -> true
-            }
-        }
 
     private fun Iterable<Option>.filterScanDocument(isScanDocumentEnabled: Boolean): List<Option> =
         filter { option ->

@@ -32,6 +32,7 @@ import kotlinx.coroutines.launch
 import me.proton.android.drive.extension.log
 import me.proton.core.drive.base.domain.extension.getOrNull
 import me.proton.core.drive.base.domain.log.LogTag
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.presentation.app.AppLifecycleProvider
 import me.proton.core.util.kotlin.CoreLogger
 
@@ -45,7 +46,7 @@ class WebViewInitializer : Initializer<Unit> {
             )
         ) {
             appLifecycleProvider.lifecycle.coroutineScope.launch(Dispatchers.Default) {
-                runCatching {
+                coRunCatching {
                     if (WebViewFeature.isFeatureSupported(WebViewFeature.START_SAFE_BROWSING)) {
                         @Suppress("DEPRECATION")
                         WebViewCompat.startSafeBrowsing(context.applicationContext) { isSuccess ->

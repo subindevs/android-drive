@@ -136,7 +136,7 @@ class AppProtonDriveClientProvider @Inject constructor(
         )
     }
 
-    private fun File.deleteCacheFile() = runCatching {
+    private fun File.deleteCacheFile() = coRunCatching {
         if (exists() && delete()) {
             CoreLogger.d(DRIVE_SDK, "Cache file $name existed and is deleted")
         }

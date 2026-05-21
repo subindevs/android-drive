@@ -50,7 +50,7 @@ class GetAddressId @Inject constructor(
                     .getOrNull("Cannot find volume share: ${shareId.id.logId()}")
             }
             ?.addressId
-            ?: getAddressId(userId)
+            ?: getAddressId(userId).getOrThrow()
     }
 
     suspend operator fun invoke(

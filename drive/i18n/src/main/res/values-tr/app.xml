@@ -46,7 +46,7 @@
   <string name="folder_option_create_folder">Klasör ekle</string>
   <string name="folder_option_take_a_photo">Yeni bir fotoğraf çekin</string>
   <string name="folder_option_create_document">Belge oluştur</string>
-  <string name="folder_option_create_spreadsheet">Hesap tablosu oluştur</string>
+  <string name="folder_option_create_spreadsheet">Elektronik tablo oluştur</string>
   <string name="folder_option_import_folder">Klasör yükle</string>
   <string name="folder_option_scan_document">Belge tara</string>
   <string name="settings_theme_system_default">Sistem varsayılanı</string>

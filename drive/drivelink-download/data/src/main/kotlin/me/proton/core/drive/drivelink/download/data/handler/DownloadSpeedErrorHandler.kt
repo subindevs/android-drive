@@ -22,6 +22,7 @@ import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import me.proton.core.drive.base.data.extension.hasConnectivity
 import me.proton.core.drive.base.domain.log.LogTag.TRACKING
+import me.proton.core.drive.drivelink.domain.usecase.UseSdkForDownload
 import me.proton.core.drive.drivelink.download.domain.handler.DownloadErrorHandler
 import me.proton.core.drive.drivelink.download.domain.manager.DownloadErrorManager
 import me.proton.core.drive.link.domain.extension.userId
@@ -31,7 +32,8 @@ import javax.inject.Inject
 
 class DownloadSpeedErrorHandler @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val downloadSpeedManager: DownloadSpeedManager
+    private val downloadSpeedManager: DownloadSpeedManager,
+    private val useSdkForDownload: UseSdkForDownload
 ) : DownloadErrorHandler {
     override suspend fun onError(downloadError: DownloadErrorManager.Error) {
         if (!downloadError.isCancelledByUser
@@ -39,7 +41,8 @@ class DownloadSpeedErrorHandler @Inject constructor(
             && !context.hasConnectivity()
         ) {
             CoreLogger.v(TRACKING, "Pausing, no network to download")
-            downloadSpeedManager.pause(downloadError.fileId.userId)
+            val usedSdk = useSdkForDownload(downloadError.fileId).getOrElse { false }
+            downloadSpeedManager.pause(downloadError.fileId.userId, usedSdk)
         }
     }
 }

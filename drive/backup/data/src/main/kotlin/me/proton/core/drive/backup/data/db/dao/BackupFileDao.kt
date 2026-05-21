@@ -461,4 +461,15 @@ abstract class BackupFileDao : BaseDao<BackupFileEntity>() {
         folderId: String,
         bucketId: Int,
     ): List<BackupStateCountEntity>
+
+    @Query(
+        """
+        UPDATE BackupFileEntity SET state = "FAILED"
+        WHERE user_id = :userId AND state = "ENQUEUED"
+        AND NOT EXISTS (
+            SELECT 1 FROM LinkUploadEntity WHERE LinkUploadEntity.uri = BackupFileEntity.uri
+        )
+        """
+    )
+    abstract suspend fun markOrphanedEnqueuedFilesAsFailed(userId: UserId): Int
 }

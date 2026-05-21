@@ -30,6 +30,7 @@ import me.proton.core.drive.base.domain.entity.Bytes
 import me.proton.core.drive.base.domain.entity.FileTypeCategory
 import me.proton.core.drive.base.domain.entity.toFileTypeCategory
 import me.proton.core.drive.base.domain.extension.bytes
+import me.proton.core.drive.base.domain.extension.mapWithPrevious
 import me.proton.core.drive.base.domain.extension.toResult
 import me.proton.core.drive.base.domain.provider.ConfigurationProvider
 import me.proton.core.drive.base.domain.util.coRunCatching
@@ -40,12 +41,13 @@ import me.proton.core.drive.feature.flag.domain.usecase.GetFeatureFlag
 import me.proton.core.drive.file.base.domain.entity.ThumbnailType
 import me.proton.core.drive.linkupload.domain.entity.UploadFileLink
 import me.proton.core.drive.linkupload.domain.entity.UploadState
+import me.proton.core.drive.linkupload.domain.manager.UploadSpeedManager
 import me.proton.core.drive.linkupload.domain.usecase.UpdateUploadState
 import me.proton.core.drive.share.domain.entity.Share
 import me.proton.core.drive.share.domain.usecase.GetShare
 import me.proton.core.drive.thumbnail.domain.usecase.CreateThumbnail
-import me.proton.core.drive.upload.domain.exception.UploadNotFoundException
 import me.proton.core.drive.upload.domain.extension.injectMessageDigests
+import me.proton.core.drive.base.domain.extension.memorizedDigest
 import me.proton.core.drive.upload.domain.manager.UploadSdkManager
 import me.proton.core.drive.upload.domain.resolver.UriResolver
 import okio.FileNotFoundException
@@ -64,6 +66,7 @@ class UploadFileSdk @Inject constructor(
     private val configurationProvider: ConfigurationProvider,
     private val getShare: GetShare,
     private val getFeatureFlag: GetFeatureFlag,
+    private val uploadSpeedManager: UploadSpeedManager,
 ) {
     @OptIn(ExperimentalStdlibApi::class)
     suspend operator fun invoke(
@@ -81,12 +84,19 @@ class UploadFileSdk @Inject constructor(
                         thumbnails = uploadFileLink.createThumbnails(uriString),
                         sha1Provider = messageDigests.firstOrNull {
                             it.algorithm == configurationProvider.contentDigestAlgorithm
-                        }?.let { digest -> { digest.digest() } }
+                        }?.memorizedDigest()
                     )
                 }
                 val job = controller.progressFlow
                     .filterNotNull()
-                    .onEach { progressUpdate -> block(progressUpdate.bytesCompleted.bytes) }
+                    .mapWithPrevious { previous, current ->
+                        val bytesUploaded = current.bytesCompleted - (previous?.bytesCompleted ?: 0L)
+                        current.bytesCompleted.bytes to bytesUploaded
+                    }
+                    .onEach { (bytesCompleted, bytesUploaded) ->
+                        block(bytesCompleted)
+                        uploadSpeedManager.add(uploadFileLink.userId, usedSdk = true, bytesUploaded)
+                    }
                     .launchIn(this)
                 controller.tryResume(this)
                 updateUploadState(uploadFileLink.id, UploadState.UPLOADING_BLOCKS).getOrThrow()

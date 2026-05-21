@@ -256,11 +256,6 @@ android {
     }
 }
 
-dependencies {
-    implementation(files("$rootDir/gopenpgp-v2-v3/gopenpgp.aar"))
-    androidTestImplementation(files("$rootDir/gopenpgp-v2-v3/gopenpgp.aar"))
-}
-
 tasks.register("publishGeneratedReleaseNotes") {
     doLast {
         val releaseNotesDir = File("${project.projectDir}/src/main/play/release-notes/en-US")
@@ -289,7 +284,7 @@ fun ApplicationProductFlavor.generateEnvFile(buildType: ApplicationBuildType) {
     val commitRefName = System.getenv("CI_COMMIT_REF_NAME")
     val commitShortSha = System.getenv("CI_COMMIT_SHORT_SHA")
 
-    val gcloudBucket = "gs://test-lab-u7cps962nd0a4-kx5m7jhd4pki6"
+    val gcloudBucket = "gs://test-lab-drive-android"
     val resultsDir = "$commitRefName/$commitShortSha"
     val localPath = "app/build/outputs/apk"
 

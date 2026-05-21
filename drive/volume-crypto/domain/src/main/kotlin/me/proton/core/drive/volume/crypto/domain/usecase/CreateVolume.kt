@@ -22,7 +22,9 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import me.proton.core.domain.arch.DataResult
 import me.proton.core.domain.entity.UserId
+import me.proton.core.drive.base.domain.log.LogTag
 import me.proton.core.drive.base.domain.usecase.GetSignatureAddress
+import me.proton.core.drive.base.domain.usecase.ReportError
 import me.proton.core.drive.crypto.domain.usecase.volume.CreateVolumeInfo
 import me.proton.core.drive.volume.domain.entity.Volume
 import me.proton.core.drive.volume.domain.repository.VolumeRepository
@@ -32,12 +34,42 @@ class CreateVolume @Inject constructor(
     private val volumeRepository: VolumeRepository,
     private val createVolumeInfo: CreateVolumeInfo,
     private val getSignatureAddress: GetSignatureAddress,
+    private val reportError: ReportError,
 ) {
     operator fun invoke(userId: UserId, type: Volume.Type): Flow<DataResult<Volume>> = flow {
-        createVolumeInfo(userId, getSignatureAddress(userId), type).onFailure { error ->
-            emit(DataResult.Error.Local(null, error))
-        }.onSuccess { volumeInfo ->
-            emitAll(volumeRepository.createVolume(userId, volumeInfo))
-        }
+        getSignatureAddress(userId)
+            .onFailure { error ->
+                reportError(
+                    tag = LogTag.VOLUME,
+                    error = error,
+                    message = "Create volume failed because get signature address failed",
+                )
+                emit(
+                    DataResult.Error.Local(
+                        message = "Create volume failed because get signature address failed",
+                        cause = error,
+                    )
+                )
+            }
+            .getOrNull()
+            ?.let { signatureAddress ->
+                createVolumeInfo(userId, signatureAddress, type)
+                    .onFailure { error ->
+                        reportError(
+                            tag = LogTag.VOLUME,
+                            error = error,
+                            message = "Create volume info failed",
+                        )
+                        emit(
+                            DataResult.Error.Local(
+                                message = "Create volume info failed",
+                                cause = error,
+                            )
+                        )
+                    }
+                    .onSuccess { volumeInfo ->
+                        emitAll(volumeRepository.createVolume(userId, volumeInfo))
+                    }
+            }
     }
 }

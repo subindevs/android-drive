@@ -66,6 +66,9 @@
   <string name="files_confirm_empty_trash_title">Izprazni smetnjak?</string>
   <string name="files_confirm_empty_trash_message">Predmeti v smetnjaku bodo trajno izbrisani. Tega dejanja ne morete razveljaviti.</string>
   <string name="files_confirm_empty_trash_confirm_action">Izprazni smetnjak</string>
+  <string name="files_confirm_remove_all_offline_title">Odstrani vse datoteke iz načina brez povezave?</string>
+  <string name="files_confirm_remove_all_offline_message">Datoteke ne bodo več na voljo v načinu brez povezave.</string>
+  <string name="files_confirm_remove_all_offline_confirm_action">Odstrani vse</string>
   <string name="files_display_file_info_action">Podrobnost datoteke</string>
   <string name="files_display_folder_info_action">Podrobnosti mape</string>
 </resources>

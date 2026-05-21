@@ -72,6 +72,6 @@ class CreatePhotoInfo @Inject constructor(
         addressId: AddressId,
     ): Result<Pair<Key.Node, Key.Node>> =
         generateShareKey(userId, addressId).mapCatching { shareKey ->
-            shareKey to generateNodeKey(userId, shareKey, getSignatureAddress(userId, addressId)).getOrThrow()
+            shareKey to generateNodeKey(userId, shareKey, getSignatureAddress(userId, addressId).getOrThrow()).getOrThrow()
         }
 }

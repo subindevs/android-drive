@@ -19,6 +19,7 @@
 package me.proton.android.drive.usecase
 
 import me.proton.core.domain.entity.UserId
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.feature.flag.domain.entity.FeatureFlagId.Companion.ratingAndroidDrive
 import me.proton.core.drive.feature.flag.domain.extension.on
 import me.proton.core.drive.feature.flag.domain.usecase.GetFeatureFlag
@@ -30,7 +31,7 @@ class ShouldShowRatingBooster @Inject constructor(
 ) {
     suspend operator fun invoke(
         userId: UserId,
-    ): Result<Boolean> = runCatching {
+    ): Result<Boolean> = coRunCatching {
         wasRatingBoosterShown().getOrThrow().not()
                 && getFeatureFlag(ratingAndroidDrive(userId)).on
     }

@@ -19,9 +19,6 @@ package me.proton.core.drive.base.data.extension
 
 import android.content.Context
 import me.proton.core.drive.base.data.entity.LoggerLevel
-import me.proton.core.drive.base.domain.extension.toProtonData
-import me.proton.core.network.domain.ApiException
-import me.proton.core.network.domain.ApiResult
 import me.proton.drive.sdk.ProtonDriveSdkException
 import me.proton.drive.sdk.ProtonSdkError
 import me.proton.core.drive.i18n.R as I18N
@@ -40,14 +37,18 @@ fun ProtonDriveSdkException.log(
     message: String? = null,
     level: LoggerLevel? = LoggerLevel.ERROR,
 ): ProtonDriveSdkException = also {
-    if (error?.domain in warningErrorDomains && level == LoggerLevel.ERROR) {
-        LoggerLevel.WARNING.log(tag, this, message)
-    } else {
-        level.log(tag, this, message)
-    }
+    loggerLevel(level).log(tag, this, message)
 }
 
-private val warningErrorDomains = listOf(
-    ProtonSdkError.ErrorDomain.Network,
-    ProtonSdkError.ErrorDomain.Transport,
-)
+internal fun ProtonDriveSdkException.loggerLevel(default: LoggerLevel? = null): LoggerLevel? =
+    when(error?.domain) {
+        ProtonSdkError.ErrorDomain.Serialization -> LoggerLevel.ERROR
+        ProtonSdkError.ErrorDomain.Api -> when(error?.secondaryCode?.toInt()) {
+            502, 503 -> LoggerLevel.ERROR
+            else -> LoggerLevel.DEBUG
+        }
+        ProtonSdkError.ErrorDomain.Network,
+        ProtonSdkError.ErrorDomain.Transport,
+        ProtonSdkError.ErrorDomain.SuccessfulCancellation, -> LoggerLevel.DEBUG
+        else -> default
+    }

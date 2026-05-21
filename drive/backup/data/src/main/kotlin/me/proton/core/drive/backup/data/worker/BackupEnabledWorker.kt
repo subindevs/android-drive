@@ -42,6 +42,7 @@ import me.proton.core.drive.base.data.workmanager.addTags
 import me.proton.core.drive.base.domain.extension.getOrNull
 import me.proton.core.drive.base.domain.log.LogTag
 import me.proton.core.drive.base.domain.log.logId
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.notification.domain.entity.NotificationId
 import me.proton.core.drive.worker.data.usecase.TransferDataNotifier
 import me.proton.core.util.kotlin.CoreLogger
@@ -88,7 +89,7 @@ class BackupEnabledWorker @AssistedInject constructor(
 
     override suspend fun getForegroundInfo(): ForegroundInfo = createForegroundInfo().getOrThrow()
 
-    private fun createForegroundInfo(): kotlin.Result<ForegroundInfo> = runCatching {
+    private fun createForegroundInfo(): kotlin.Result<ForegroundInfo> = coRunCatching {
         val transferNotification = transferDataNotification.getOrThrow()
         ForegroundInfo(
             transferNotification.first.id,

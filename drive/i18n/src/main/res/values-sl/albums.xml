@@ -105,10 +105,10 @@
             "17 items added to your Drive"
     -->
   <plurals name="in_app_notification_add_to_stream_success">
-    <item quantity="one">%1$d dodan v vaš Drive</item>
-    <item quantity="two">%1$d dodana v vaš Drive</item>
-    <item quantity="few">%1$d dodani v vaš Drive</item>
-    <item quantity="other">%1$d dodanih v vaš Drive</item>
+    <item quantity="one">%1$d predmet dodan v vaš Drive</item>
+    <item quantity="two">%1$d predmeta dodana v vaš Drive</item>
+    <item quantity="few">%1$d predmeti dodani v vaš Drive</item>
+    <item quantity="other">%1$d predmetov dodanih v vaš Drive</item>
   </plurals>
   <!--
         Variable %1$d is a number of photos that were not added because they already exist
@@ -132,7 +132,7 @@
     <item quantity="one">%1$d predmet ni uspel.</item>
     <item quantity="two">%1$d predmeta nista uspela.</item>
     <item quantity="few">%1$d predmeti niso uspeli.</item>
-    <item quantity="other">%1$d predmetov ni uspelio.</item>
+    <item quantity="other">%1$d predmetov ni uspelo.</item>
   </plurals>
   <!--
         Variable %1$d is a number of photos removed from album
@@ -159,7 +159,7 @@
     <item quantity="other">%1$d predmetov ni uspelo</item>
   </plurals>
   <string name="albums_empty_album_screen_title">Brez fotografij</string>
-  <string name="albums_empty_album_screen_description">Fotografije, ki joh boste dodali vi ali drugi člani, bodo prikazane tukaj</string>
+  <string name="albums_empty_album_screen_description">Fotografije, ki jih boste dodali vi ali drugi člani, bodo prikazane tukaj</string>
   <string name="albums_empty_albums_list_screen_title">Ni albumov</string>
   <string name="albums_empty_albums_list_screen_description">Albumi, ki jih ustvarite ali se jim pridružite, bodo prikazani tukaj</string>
   <string name="albums_empty_albums_my_albums_screen_description">Albumi, ki jih ustvarite, bodo prikazani tukaj</string>

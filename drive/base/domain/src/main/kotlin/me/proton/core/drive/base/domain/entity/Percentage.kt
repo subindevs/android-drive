@@ -26,7 +26,9 @@ value class Percentage private constructor(val value: Float) : Comparable<Percen
     override fun compareTo(other: Percentage): Int = value.compareTo(other.value)
 
     companion object {
-        operator fun invoke(value: Float) = Percentage(value.coerceIn(0f, 1f))
+        operator fun invoke(value: Float) = Percentage(
+            if (value.isNaN()) 0f else value.coerceIn(0f, 1f)
+        )
         operator fun invoke(percentage: Int) = when (percentage) {
             0 -> Percentage(0f)
             100 -> Percentage(1f)

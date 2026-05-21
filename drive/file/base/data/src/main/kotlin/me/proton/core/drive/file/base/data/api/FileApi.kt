@@ -98,5 +98,5 @@ interface FileApi : BaseRetrofitApi {
         @Part filePart: MultipartBody.Part,
         //@Tag timeoutOverride: TimeoutOverride, // TODO: when timeoutOverride is bigger then ApiClient.timeoutSeconds this does not work
                                                  //      as Core sets timeoutSeconds to Coroutine that executes this API call
-    ): Response<ResponseBody>
+    ): CodeResponse
 }

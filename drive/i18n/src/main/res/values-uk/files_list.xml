@@ -65,6 +65,9 @@
   <string name="files_confirm_empty_trash_title">Спорожнити смітник?</string>
   <string name="files_confirm_empty_trash_message">Елементи зі смітника будуть остаточно видалені. Ви не можете скасувати цю дію.</string>
   <string name="files_confirm_empty_trash_confirm_action">Спорожнити смітник</string>
+  <string name="files_confirm_remove_all_offline_title">Remove all from offline?</string>
+  <string name="files_confirm_remove_all_offline_message">Files will no longer be available offline.</string>
+  <string name="files_confirm_remove_all_offline_confirm_action">Remove all</string>
   <string name="files_display_file_info_action">Подробиці файлу</string>
   <string name="files_display_folder_info_action">Подробиці теки</string>
 </resources>

@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import me.proton.core.compose.theme.ProtonDimens.DefaultSpacing
@@ -47,7 +49,6 @@ import me.proton.core.domain.entity.UserId
 import me.proton.core.drive.base.domain.entity.CryptoProperty
 import me.proton.core.drive.base.domain.entity.TimestampS
 import me.proton.core.drive.base.presentation.component.EncryptedItem
-import me.proton.core.drive.base.presentation.component.text.TextWithMiddleEllipsis
 import me.proton.core.drive.device.domain.entity.Device
 import me.proton.core.drive.device.domain.entity.DeviceId
 import me.proton.core.drive.device.domain.extension.name
@@ -116,10 +117,11 @@ fun DetailsTitle(
     modifier: Modifier = Modifier,
 ) {
     if (device.cryptoName is CryptoProperty.Decrypted) {
-        TextWithMiddleEllipsis(
+        Text(
             text = device.name,
             style = ProtonTheme.typography.defaultNorm(),
             maxLines = 1,
+            overflow = TextOverflow.MiddleEllipsis,
             modifier = modifier,
         )
     } else {
@@ -133,10 +135,11 @@ fun DetailsSubtitle(
     modifier: Modifier = Modifier,
 ) {
     val localContext = LocalContext.current
-    TextWithMiddleEllipsis(
+    Text(
         text = device.getTypeName(localContext),
         style = ProtonTheme.typography.captionWeak(),
         maxLines = 1,
+        overflow = TextOverflow.MiddleEllipsis,
         modifier = modifier,
     )
 }

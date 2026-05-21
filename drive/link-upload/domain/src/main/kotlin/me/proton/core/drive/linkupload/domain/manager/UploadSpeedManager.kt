@@ -52,10 +52,10 @@ class UploadSpeedManager @Inject constructor(
         }
     }
 
-    suspend fun pause(userId: UserId) {
+    suspend fun pause(userId: UserId, usedSdk: Boolean = true) {
         mutex.withLock {
             if (bytesPerMinutes > 0) {
-                checkTime(userId, THRESHOLD)
+                checkTime(userId, usedSdk, THRESHOLD)
             }
         }
         stopWatch.stop()
@@ -63,16 +63,17 @@ class UploadSpeedManager @Inject constructor(
 
     fun isRunning() = stopWatch.isRunning()
 
-    suspend fun add(userId: UserId, value: Long) {
+    suspend fun add(userId: UserId, usedSdk: Boolean, value: Long) {
         mutex.withLock {
             bytesPerMinutes += value
             stopWatch.start()
-            checkTime(userId)
+            checkTime(userId, usedSdk)
         }
     }
 
     private fun checkTime(
         userId: UserId,
+        usedSdk: Boolean,
         clockElapsedTime: Long = minuteWatch.getElapsedTimeInMs()
     ) {
         if (clockElapsedTime >= THRESHOLD) {
@@ -83,7 +84,7 @@ class UploadSpeedManager @Inject constructor(
             if (stopWatch.isRunning()) {
                 val stopElapsedTime = stopWatch.getElapsedTimeInMs()
                 if (stopElapsedTime < MAX_LIMIT) {
-                    announceSpeed(userId, stopElapsedTime)
+                    announceSpeed(userId, usedSdk, stopElapsedTime)
                 } else {
                     CoreLogger.d(
                         TRACKING,
@@ -100,12 +101,13 @@ class UploadSpeedManager @Inject constructor(
 
     private fun Long.toSeconds() = this.toFloat() / 1000
 
-    private fun announceSpeed(userId: UserId, elapsedTimeInMs: Long) {
+    private fun announceSpeed(userId: UserId, usedSdk: Boolean, elapsedTimeInMs: Long) {
         if (elapsedTimeInMs != 0L) {
             asyncAnnounceEventProvider.get().invoke(
                 userId, Event.UploadSpeed(
                     bytes = bytesPerMinutes.bytes,
-                    elapsedTime = TimestampMs(elapsedTimeInMs)
+                    elapsedTime = TimestampMs(elapsedTimeInMs),
+                    usedSdk = usedSdk,
                 )
             )
         }

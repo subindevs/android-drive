@@ -27,6 +27,7 @@ import android.os.Build
 import android.provider.MediaStore
 import android.provider.OpenableColumns
 import kotlinx.coroutines.Dispatchers
+import me.proton.core.drive.base.data.entity.LoggerLevel
 import me.proton.core.drive.base.domain.entity.Bytes
 import me.proton.core.drive.base.domain.entity.TimestampMs
 import me.proton.core.drive.base.domain.extension.extensionOrEmpty
@@ -136,19 +137,40 @@ class ContentUriResolver(
         }
     }
 
+    override suspend fun release(uriString: String) {
+        val uri = Uri.parse(uriString)
+        if (uri.authority != MediaStore.AUTHORITY) {
+            coRunCatching {
+                applicationContext.contentResolver.releasePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION,
+                )
+            }.onFailure { error ->
+                error.log(
+                    tag = UPLOAD,
+                    message = "Failed to release persistable URI permission for: $uriString",
+                    level = LoggerLevel.DEBUG,
+                )
+            }
+        }
+    }
+
     private suspend fun<T> withContentResolver(
         uriString: String,
         block: suspend ContentResolver.(Uri) -> T,
     ): T? = coRunCatching(coroutineContext) {
         with (applicationContext.contentResolver) {
             val uri = Uri.parse(uriString)
-            runCatching {
-                takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }.onFailure { error ->
-                error.log(
-                    tag = UPLOAD,
-                    message = "No persistable permission for: $uriString, relying on temporary grant",
-                )
+            if (uri.authority != MediaStore.AUTHORITY) {
+                coRunCatching {
+                    takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }.onFailure { error ->
+                    error.log(
+                        tag = UPLOAD,
+                        message = "No persistable permission for: $uriString, relying on temporary grant",
+                        level = LoggerLevel.DEBUG,
+                    )
+                }
             }
             block(uri)
         }

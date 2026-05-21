@@ -63,6 +63,9 @@
   <string name="files_confirm_empty_trash_title">Tøm papirkurv?</string>
   <string name="files_confirm_empty_trash_message">Elementer i papirkurven vil blive slettet permanent. Dette kan ikke fortrydes.</string>
   <string name="files_confirm_empty_trash_confirm_action">Tøm papirkurv</string>
+  <string name="files_confirm_remove_all_offline_title">Fjern alt/alle fra offline?</string>
+  <string name="files_confirm_remove_all_offline_message">Filerne vil ikke længere være tilgængelige offline.</string>
+  <string name="files_confirm_remove_all_offline_confirm_action">Fjern alt/alle</string>
   <string name="files_display_file_info_action">Fildetaljer</string>
   <string name="files_display_folder_info_action">Mappedetaljer</string>
 </resources>

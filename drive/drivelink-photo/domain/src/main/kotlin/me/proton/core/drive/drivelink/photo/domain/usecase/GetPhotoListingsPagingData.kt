@@ -23,6 +23,7 @@ import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.transformLatest
@@ -34,14 +35,15 @@ import me.proton.core.drive.link.domain.entity.PhotoTag
 import me.proton.core.drive.photo.domain.entity.PhotoListing
 import me.proton.core.drive.photo.domain.repository.PhotoRepository
 import me.proton.core.drive.volume.domain.entity.VolumeId
+import me.proton.core.util.kotlin.CoreLogger
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class GetPhotoListingsPagingData @Inject constructor(
     private val photoRepository: PhotoRepository,
     private val configurationProvider: ConfigurationProvider,
     private val reportError: ReportError,
 ) {
-    @OptIn(ExperimentalCoroutinesApi::class)
     operator fun <T : Any> invoke(
         userId: UserId,
         volumeId: VolumeId,
@@ -54,6 +56,7 @@ class GetPhotoListingsPagingData @Inject constructor(
                 if (count == 0) emit(pagingDataLoading())
                 try {
                     val items = loadAllPages(userId, volumeId, tag, transform)
+                    CoreLogger.d(LogTag.PHOTO, "loadAllPages loaded ${items.size} photo listings")
                     emit(pagingDataComplete(items))
                 } catch (e: CancellationException) {
                     throw e
@@ -100,18 +103,19 @@ class GetPhotoListingsPagingData @Inject constructor(
         transform: suspend (PhotoListing) -> T,
     ): List<T> {
         val result = mutableListOf<T>()
-        var offset = 0
+        val dbPageSize = configurationProvider.dbListingPageSize
+        var lastPhotoListing: PhotoListing? = null
         while (true) {
             val page = photoRepository.getPhotoListings(
                 userId = userId,
                 volumeId = volumeId,
-                fromIndex = offset,
-                count = configurationProvider.dbPageSize,
+                count = dbPageSize,
+                lastPhotoListing = lastPhotoListing,
                 tag = tag,
             )
             page.mapTo(result) { transform(it) }
-            if (page.size < configurationProvider.dbPageSize) break
-            offset += configurationProvider.dbPageSize
+            if (page.size < dbPageSize) break
+            lastPhotoListing = page.lastOrNull()
         }
         return result
     }

@@ -21,7 +21,7 @@ package me.proton.android.drive.ui.dialog
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import me.proton.core.drive.log.presentation.component.LogOptions
 import me.proton.core.drive.log.presentation.viewmodel.LogOptionsViewModel
 

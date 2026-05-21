@@ -30,7 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import me.proton.android.drive.ui.effect.HandleHomeEffect
 import me.proton.android.drive.ui.viewevent.ComputersViewEvent
@@ -89,7 +89,7 @@ fun Computers(
     devices: List<Device>,
     modifier: Modifier = Modifier,
 ) {
-    LaunchedEffect(viewState) {
+    LaunchedEffect(Unit) {
         homeScaffoldState.topAppBar.value = {
             TopAppBar(
                 viewState = viewState,

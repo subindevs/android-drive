@@ -51,6 +51,6 @@ class GetProtonDocumentUriStringImpl @Inject constructor(
     private suspend fun DriveLink.getEmail() = getShare(shareId).toResult().getOrThrow()
         .addressId
         ?.let { addressId ->
-            getUserEmail(userId, addressId)
-        } ?: getUserEmail(userId)
+            getUserEmail(userId, addressId).getOrThrow()
+        } ?: getUserEmail(userId).getOrThrow()
 }

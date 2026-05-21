@@ -29,7 +29,9 @@
   <string name="common_type">Typ</string>
   <string name="common_yes">Áno</string>
   <string name="common_download">Stiahnuť</string>
+  <string name="common_downloaded">Stiahnuté</string>
   <string name="common_downloading">Sťahovanie</string>
+  <string name="common_waiting_for_download">Čaká sa na stiahnutie</string>
   <string name="common_link">Odkaz</string>
   <string name="common_password">Heslo</string>
   <string name="common_retry">Opakovať</string>
@@ -61,6 +63,7 @@
   <string name="common_delete_permanently_action">Navždy zmazať</string>
   <string name="common_make_available_offline_action">Sprístupniť offline</string>
   <string name="common_remove_from_offline_available_action">Odobrať z dostupných offline</string>
+  <string name="common_remove_all_from_offline_available_action">Odobrať všetko z dostupných offline</string>
   <string name="common_get_link_action">Získať odkaz</string>
   <string name="common_manage_link_action">Spravovať odkaz</string>
   <string name="common_manage_access_action">Spravovať prístup</string>
@@ -79,6 +82,8 @@
   <string name="common_tag_photo_action">Naskenujte fotografiu pre štítky</string>
   <string name="common_save_as_action">Uložiť ako</string>
   <string name="common_open_action">Otvoriť</string>
+  <string name="common_back_action">Späť</string>
+  <string name="common_open_side_menu_action">Otvoriť bočné menu</string>
   <!-- endregion -->
   <!-- region Common file types -->
   <string name="common_type_audio">Audio</string>

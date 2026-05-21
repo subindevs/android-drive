@@ -28,7 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import me.proton.android.drive.ui.viewmodel.SortingDialogViewModel
 import me.proton.core.compose.component.bottomsheet.RunAction
 import me.proton.core.compose.theme.ProtonDimens.DefaultBottomSheetHeaderMinHeight

@@ -24,13 +24,13 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import me.proton.core.compose.component.bottomsheet.BottomSheetContent
 import me.proton.core.compose.theme.ProtonDimens
 import me.proton.core.compose.theme.ProtonTheme
-import me.proton.core.compose.theme.defaultSmallStrong
+import me.proton.core.compose.theme.defaultSmallStrongNorm
 import me.proton.core.drive.base.presentation.component.BottomSheetEntry
 import me.proton.core.drive.base.presentation.component.EncryptedItem
-import me.proton.core.drive.base.presentation.component.text.TextWithMiddleEllipsis
 import me.proton.core.drive.drivelink.domain.entity.DriveLink
 import me.proton.core.drive.drivelink.domain.extension.isNameEncrypted
 import me.proton.core.drive.files.presentation.entry.FileOptionEntry
@@ -90,10 +90,11 @@ internal fun ParentFolderOptionsHeader(
                 EncryptedItem()
             }
         } else {
-            TextWithMiddleEllipsis(
+            Text(
                 text = title,
-                style = ProtonTheme.typography.defaultSmallStrong,
+                style = ProtonTheme.typography.defaultSmallStrongNorm,
                 maxLines = 1,
+                overflow = TextOverflow.MiddleEllipsis,
             )
         }
     }

@@ -74,7 +74,6 @@ allprojects {
 
 subprojects {
     configurations.all {
-        exclude(group = "me.proton.crypto", module = "android-golib")
         exclude(group = "org.jetbrains.kotlin", module = "kotlin-android-extensions-runtime")
     }
 }

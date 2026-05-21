@@ -53,6 +53,7 @@ import me.proton.core.drive.backup.domain.entity.BackupPermissions
 import me.proton.core.drive.backup.domain.manager.BackupPermissionsManager
 import me.proton.core.drive.backup.domain.usecase.AnnounceFolderStatus
 import me.proton.core.drive.backup.domain.usecase.CheckAvailableSpace
+import me.proton.core.drive.backup.domain.usecase.MarkOrphanedEnqueuedFilesAsFailed
 import me.proton.core.drive.backup.domain.usecase.HasFolders
 import me.proton.core.drive.backup.domain.usecase.ObserveConfigurationChanges
 import me.proton.core.drive.backup.domain.usecase.StartBackupAfterErrorResolved
@@ -83,7 +84,11 @@ class BackupInitializer : Initializer<Unit> {
                     val scope = scopes.getOrPut(userId) {
                         CoroutineScope(Dispatchers.IO + Job())
                     }
-
+                    markOrphanedEnqueuedFilesAsFailed(userId = userId).onSuccess {
+                        CoreLogger.i(BACKUP, "Marked $it enqueued files without upload as failed")
+                    }.onFailure { error ->
+                        error.log(BACKUP, "Failed to mark orphaned enqueued files as failed")
+                    }
                     backupPermissionsManager.backupPermissions.mapWithPrevious { previous, permissions ->
                         previous is BackupPermissions.Denied && permissions is BackupPermissions.Granted
                     }.filter { acquirePermissions ->
@@ -176,6 +181,7 @@ class BackupInitializer : Initializer<Unit> {
         val rescanOnMediaStoreUpdate: RescanOnMediaStoreUpdate
         val observeConfigurationChanges: ObserveConfigurationChanges
         val syncStaleFolders: SyncStaleFolders
+        val markOrphanedEnqueuedFilesAsFailed: MarkOrphanedEnqueuedFilesAsFailed
         val announceFolderStatus: AnnounceFolderStatus
         val workManager: WorkManager
     }

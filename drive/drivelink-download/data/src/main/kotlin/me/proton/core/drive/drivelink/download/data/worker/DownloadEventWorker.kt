@@ -51,6 +51,7 @@ import me.proton.core.drive.announce.event.domain.usecase.AnnounceEvent
 import me.proton.core.drive.base.domain.entity.Percentage
 import me.proton.core.drive.base.domain.extension.getOrNull
 import me.proton.core.drive.base.domain.log.LogTag
+import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.drivelink.download.domain.entity.DownloadFileLink
 import me.proton.core.drive.drivelink.download.domain.manager.DownloadManager
 import me.proton.core.drive.drivelink.download.domain.repository.DownloadFileRepository
@@ -176,7 +177,7 @@ class DownloadEventWorker @AssistedInject constructor(
     override suspend fun getForegroundInfo(): ForegroundInfo =
         createForegroundInfo().getOrThrow()
 
-    private fun createForegroundInfo(): kotlin.Result<ForegroundInfo> = runCatching {
+    private fun createForegroundInfo(): kotlin.Result<ForegroundInfo> = coRunCatching {
         val (notificationId, notification) = transferDataNotification.getOrThrow()
         ForegroundInfo(
             notificationId.id,

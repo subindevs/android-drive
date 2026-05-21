@@ -22,6 +22,7 @@ import me.proton.core.drive.announce.event.domain.extension.toKibibytesPerSecond
 import me.proton.core.drive.announce.event.domain.entity.Event
 import me.proton.core.drive.base.domain.log.LogTag.TRACKING
 import me.proton.core.drive.observability.domain.metrics.DownloadSpeedHistogram
+import me.proton.core.drive.observability.domain.metrics.common.Pipeline
 import me.proton.core.drive.observability.domain.usecase.EnqueueObservabilityEvent
 import me.proton.core.presentation.app.AppLifecycleObserver
 import me.proton.core.presentation.app.AppLifecycleProvider.State.Foreground
@@ -47,7 +48,8 @@ class EnqueueDownloadSpeedHistogramEvent @Inject constructor(
                         DownloadSpeedHistogram.Context.foreground
                     } else {
                         DownloadSpeedHistogram.Context.background
-                    }
+                    },
+                    pipeline = if (event.usedSdk) Pipeline.default else Pipeline.legacy,
                 ),
                 Value = kibibytesPerSecond
             )
