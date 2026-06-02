@@ -57,6 +57,7 @@ import me.proton.android.drive.extension.thumbnailVO
 import me.proton.android.drive.photos.domain.entity.PhotoBackupState
 import me.proton.android.drive.photos.domain.usecase.AddToAlbumInfo
 import me.proton.android.drive.photos.domain.usecase.EnablePhotosBackup
+import me.proton.android.drive.photos.domain.usecase.EnsureBackupAlbums
 import me.proton.android.drive.photos.domain.usecase.GetAddToAlbumPhotoListings
 import me.proton.android.drive.photos.domain.usecase.GetPhotoListingCount
 import me.proton.android.drive.photos.domain.usecase.GetPhotosDriveLink
@@ -191,6 +192,7 @@ class PhotosViewModel @Inject constructor(
     private val onFilesDriveLinkError: OnFilesDriveLinkError,
     private val syncFolders: SyncFolders,
     private val checkMissingFolders: CheckMissingFolders,
+    private val ensureBackupAlbums: EnsureBackupAlbums,
     private val cancelUserMessage: CancelUserMessage,
     private val toFirstItemMetricsNotifier: ToFirstItemMetricsNotifier,
     private val isSpringSalePromoEnabled: IsSpringSalePromoEnabled,
@@ -299,6 +301,11 @@ class PhotosViewModel @Inject constructor(
                         .onSuccess { driveLink ->
                             CoreLogger.d(VIEW_MODEL, "Link (${driveLink.id.id.logId()}) loaded")
                             parentId.value = driveLink.id
+                            viewModelScope.launch {
+                                ensureBackupAlbums(driveLink.id).onFailure { error ->
+                                    error.log(VIEW_MODEL, "Failed to ensure backup albums")
+                                }
+                            }
                             return@mapWithPrevious driveLink
                         }
                         .onFailure { error ->
