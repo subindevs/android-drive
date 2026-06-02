@@ -28,6 +28,7 @@ import me.proton.core.drive.backup.data.db.dao.BackupErrorDao
 import me.proton.core.drive.backup.data.db.dao.BackupFileDao
 import me.proton.core.drive.backup.data.db.dao.BackupFolderDao
 import me.proton.core.drive.base.data.db.Column
+import me.proton.core.drive.base.data.db.Column
 import me.proton.core.drive.base.data.db.Column.SYNC_TIME
 
 interface BackupDatabase : Database {
@@ -437,6 +438,12 @@ interface BackupDatabase : Database {
                     CREATE INDEX IF NOT EXISTS `index_BackupFileEntity_user_id_state` ON `BackupFileEntity` (`user_id`, `state`)
                     """.trimIndent()
                 )
+            }
+        }
+
+        val MIGRATION_9 = object : DatabaseMigration {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.addTableColumn("BackupFolderEntity", Column.ALBUM_ID, "TEXT")
             }
         }
     }

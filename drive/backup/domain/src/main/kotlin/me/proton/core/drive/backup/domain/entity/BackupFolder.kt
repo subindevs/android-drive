@@ -19,6 +19,7 @@
 package me.proton.core.drive.backup.domain.entity
 
 import me.proton.core.drive.base.domain.entity.TimestampS
+import me.proton.core.drive.link.domain.entity.AlbumId
 import me.proton.core.drive.link.domain.entity.FolderId
 
 data class BackupFolder(
@@ -26,4 +27,5 @@ data class BackupFolder(
     val folderId: FolderId,
     val updateTime: TimestampS? = null,
     val syncTime: TimestampS? = null,
+    val albumId: AlbumId? = null,
 )

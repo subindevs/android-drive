@@ -21,6 +21,7 @@ package me.proton.core.drive.backup.data.extension
 import me.proton.core.drive.backup.data.db.entity.BackupFolderEntity
 import me.proton.core.drive.backup.domain.entity.BackupFolder
 import me.proton.core.drive.base.domain.entity.TimestampS
+import me.proton.core.drive.link.domain.entity.AlbumId
 import me.proton.core.drive.link.domain.entity.FolderId
 import me.proton.core.drive.share.domain.entity.ShareId
 
@@ -30,4 +31,5 @@ fun BackupFolderEntity.toBackupFolder() = BackupFolder(
     folderId = FolderId(ShareId(userId, shareId), parentId),
     updateTime = updateTime?.let(::TimestampS),
     syncTime = syncTime?.let(::TimestampS),
+    albumId = albumLinkId?.let { AlbumId(ShareId(userId, shareId), it) },
 )

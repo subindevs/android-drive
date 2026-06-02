@@ -26,4 +26,7 @@ internal object WorkerKeys {
     const val KEY_FILE_URI = "key.fileUri"
     const val KEY_TIMESTAMP = "key.timestamp"
     const val KEY_UPLOAD_PRIORITY = "key.uploadPriority"
+    const val KEY_VOLUME_ID = "key.volumeId"
+    const val KEY_ALBUM_LINK_ID = "key.albumLinkId"
+    const val KEY_FILE_LINK_ID = "key.fileLinkId"
 }

@@ -24,6 +24,7 @@ import androidx.room.ForeignKey
 import me.proton.core.account.data.entity.AccountEntity
 import me.proton.core.domain.entity.UserId
 import me.proton.core.drive.base.data.db.Column
+import me.proton.core.drive.base.data.db.Column.ALBUM_ID
 import me.proton.core.drive.base.data.db.Column.BUCKET_ID
 import me.proton.core.drive.base.data.db.Column.PARENT_ID
 import me.proton.core.drive.base.data.db.Column.SHARE_ID
@@ -69,4 +70,6 @@ data class BackupFolderEntity(
     val updateTime: Long?,
     @ColumnInfo(name = SYNC_TIME, defaultValue = "NULL")
     val syncTime: Long?,
+    @ColumnInfo(name = ALBUM_ID, defaultValue = "NULL")
+    val albumLinkId: String? = null,
 )

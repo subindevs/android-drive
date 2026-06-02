@@ -32,6 +32,7 @@ driveModule(
     api(project(":drive:backup:domain"))
     api(project(":drive:base:data"))
     api(project(":drive:base:presentation")) // for Throwable.log
+    api(project(":drive:drivelink-photo:domain"))
     api(project(":drive:link-upload:data"))
     api(project(":drive:share:data"))
     api(project(":drive:upload:data"))

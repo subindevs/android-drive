@@ -25,7 +25,9 @@ import me.proton.core.drive.backup.domain.repository.BucketRepository
 import me.proton.core.drive.backup.domain.usecase.AddFolder
 import me.proton.core.drive.base.domain.log.LogTag.BACKUP
 import me.proton.core.drive.base.domain.util.coRunCatching
+import me.proton.core.drive.drivelink.photo.domain.usecase.CreateAlbum
 import me.proton.core.drive.link.domain.entity.FolderId
+import me.proton.core.drive.link.domain.extension.userId
 import me.proton.core.util.kotlin.CoreLogger
 import javax.inject.Inject
 
@@ -33,6 +35,7 @@ class SetupPhotosBackup @Inject constructor(
     private val setupPhotosConfigurationBackup: SetupPhotosConfigurationBackup,
     private val addFolder: AddFolder,
     private val bucketRepository: BucketRepository,
+    private val createAlbum: CreateAlbum,
 ) {
 
     suspend operator fun invoke(
@@ -40,11 +43,20 @@ class SetupPhotosBackup @Inject constructor(
         folderFilter: (BucketEntry) -> Boolean,
     ) = coRunCatching {
         setupPhotosConfigurationBackup(folderId).getOrThrow()
+        val userId = folderId.userId
         val bucketEntries = bucketRepository.getAll()
         bucketEntries.filter(folderFilter).map { entry ->
+            val albumId = entry.bucketName?.let { name ->
+                createAlbum(userId, name, isLocked = false)
+                    .onFailure { error ->
+                        CoreLogger.w(BACKUP, error, "Cannot create album for bucket: ${entry.bucketId}")
+                    }
+                    .getOrNull()
+            }
             BackupFolder(
                 bucketId = entry.bucketId,
                 folderId = folderId,
+                albumId = albumId,
             ) to entry.bucketName
         }.onEach { (backupFolder, _) ->
             addFolder(backupFolder).getOrThrow()

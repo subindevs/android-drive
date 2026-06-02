@@ -35,4 +35,5 @@ fun BackupFolder.toEntity() = BackupFolderEntity(
     bucketId = bucketId,
     updateTime = updateTime?.value,
     syncTime = syncTime?.value,
+    albumLinkId = albumId?.id,
 )

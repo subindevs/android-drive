@@ -24,8 +24,10 @@ import me.proton.core.drive.base.domain.extension.getOrNull
 import me.proton.core.drive.base.domain.extension.toResult
 import me.proton.core.drive.base.domain.log.LogTag.BACKUP
 import me.proton.core.drive.linkupload.domain.entity.UploadFileLink
+import me.proton.core.drive.linkupload.domain.extension.fileId
 import me.proton.core.drive.linkupload.domain.usecase.GetUploadFileLink
 import me.proton.core.drive.upload.data.worker.CleanupWorkers
+import me.proton.core.util.kotlin.CoreLogger
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
@@ -53,7 +55,7 @@ class BackupCleanupWorkers @Inject constructor(
             getFolderFromFile(userId, uriString)
                 .getOrNull(BACKUP, "Cannot get folder from file: $uriString")
                 ?.let { backupFolder ->
-                    listOf(
+                    val workers = mutableListOf(
                         BackupScheduleUploadFolderWorker.getWorkRequest(
                             backupFolder = backupFolder,
                             delay = 60.seconds,
@@ -61,6 +63,20 @@ class BackupCleanupWorkers @Inject constructor(
                         BackupNotificationWorker.getWorkRequest(backupFolder.folderId),
                         BackupClearFileWorker.getWorkRequest(backupFolder, uriString),
                     )
+                    val albumId = backupFolder.albumId
+                    val fileId = uploadFileLink.fileId
+                    if (albumId != null && fileId != null) {
+                        workers += BackupAddToAlbumWorker.getWorkRequest(
+                            userId = userId,
+                            shareId = uploadFileLink.shareId,
+                            volumeId = uploadFileLink.volumeId,
+                            albumId = albumId,
+                            fileId = fileId,
+                        )
+                    } else if (albumId != null) {
+                        CoreLogger.w(BACKUP, "Cannot add to album: fileId is null for $uriString")
+                    }
+                    workers
                 }.orEmpty()
         }
     }
