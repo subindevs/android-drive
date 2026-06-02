@@ -29,6 +29,7 @@ driveModule(
     hilt = true,
     socialTest = true,
 ) {
+    api(project(":app-ui-settings"))
     api(project(":drive:announce-event:domain"))
     api(project(":drive:backup:domain"))
     api(project(":drive:base:domain"))

@@ -62,8 +62,8 @@ import me.proton.core.drive.photo.domain.entity.TagsMigrationStatistics
 import me.proton.core.drive.photo.domain.usecase.GetTagsMigrationStatistics
 import me.proton.core.drive.volume.domain.entity.Volume
 import me.proton.core.drive.volume.domain.usecase.GetOldestActiveVolume
+import me.proton.android.drive.photos.domain.usecase.UpdateBackupDeviceName
 import me.proton.drive.android.settings.domain.usecase.GetDeviceName
-import me.proton.drive.android.settings.domain.usecase.UpdateDeviceName
 import java.text.NumberFormat
 import java.util.Locale
 import javax.inject.Inject
@@ -86,7 +86,7 @@ class PhotosBackupViewModel @Inject constructor(
     private val getGetTagsMigrationStatistics: GetTagsMigrationStatistics,
     val backupPermissionsViewModel: BackupPermissionsViewModel,
     private val getDeviceName: GetDeviceName,
-    private val updateDeviceName: UpdateDeviceName,
+    private val updateBackupDeviceName: UpdateBackupDeviceName,
 ) : ViewModel(), UserViewModel by UserViewModel(savedStateHandle) {
 
     val initialViewState: PhotosBackupViewState = PhotosBackupViewState(
@@ -229,7 +229,7 @@ class PhotosBackupViewModel @Inject constructor(
 
         override val onDeviceNameChange: (String) -> Unit = { name ->
             viewModelScope.launch {
-                updateDeviceName(userId, name).onFailure { error ->
+                updateBackupDeviceName(userId, name).onFailure { error ->
                     error.log(VIEW_MODEL, "Failed to update device name")
                 }
             }
