@@ -24,6 +24,7 @@ import androidx.room.ForeignKey
 import me.proton.core.account.data.entity.AccountEntity
 import me.proton.core.domain.entity.UserId
 import me.proton.core.drive.base.data.db.Column
+import me.proton.core.drive.base.data.db.Column.DEVICE_NAME
 import me.proton.core.drive.base.data.db.Column.HOME_TAB
 import me.proton.core.drive.base.data.db.Column.LAYOUT_TYPE
 import me.proton.core.drive.base.data.db.Column.THEME_STYLE
@@ -52,4 +53,6 @@ data class UiSettingsEntity(
     val themeStyle: ThemeStyle,
     @ColumnInfo(name = HOME_TAB, defaultValue = "NULL")
     val homeTab: HomeTab? = null,
+    @ColumnInfo(name = DEVICE_NAME, defaultValue = "")
+    val deviceName: String = "",
 )

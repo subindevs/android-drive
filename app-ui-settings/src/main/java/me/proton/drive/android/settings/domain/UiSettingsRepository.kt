@@ -50,6 +50,11 @@ interface UiSettingsRepository {
     suspend fun updateHomeTab(userId: UserId, homeTab: HomeTab)
 
     /**
+     * Update the device name for a given [userId]
+     */
+    suspend fun updateDeviceName(userId: UserId, deviceName: String)
+
+    /**
      * Retrieves setting if onboarding screen has been shown to the user
      */
     suspend fun hasShownOnboarding(): Boolean

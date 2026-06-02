@@ -22,6 +22,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import me.proton.core.data.room.db.Database
 import me.proton.core.data.room.db.extension.recreateTable
 import me.proton.core.data.room.db.migration.DatabaseMigration
+import me.proton.core.data.room.db.extension.addTableColumn
+import me.proton.core.drive.base.data.db.Column
 import me.proton.core.drive.base.data.db.Column.HOME_TAB
 import me.proton.core.drive.base.data.db.Column.LAYOUT_TYPE
 import me.proton.core.drive.base.data.db.Column.THEME_STYLE
@@ -62,6 +64,12 @@ interface AppUiSettingsDatabase : Database {
                     createIndices = {},
                     columns = listOf(USER_ID, LAYOUT_TYPE, THEME_STYLE, HOME_TAB)
                 )
+            }
+        }
+
+        val MIGRATION_2 = object : DatabaseMigration {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.addTableColumn("UiSettingsEntity", Column.DEVICE_NAME, "TEXT", "''")
             }
         }
     }

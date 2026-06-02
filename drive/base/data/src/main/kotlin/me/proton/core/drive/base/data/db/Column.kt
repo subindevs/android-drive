@@ -42,6 +42,7 @@ object Column {
     const val CREATION_TIME = "creation_time"
     const val CREATOR_EMAIL = "creator_email"
     const val DETAILS = "details"
+    const val DEVICE_NAME = "device_name"
     const val DIGESTS = "digests"
     const val DURATION = "duration"
     const val ENCRYPTED = "encrypted"

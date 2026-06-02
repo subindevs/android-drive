@@ -25,4 +25,5 @@ fun UiSettingsEntity.toDomain() = UiSettings(
     layoutType = layoutType,
     themeStyle = themeStyle,
     homeTab = homeTab,
+    deviceName = deviceName,
 )

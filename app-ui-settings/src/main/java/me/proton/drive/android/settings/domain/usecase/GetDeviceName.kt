@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Proton AG.
+ * Copyright (c) 2025 Proton AG.
  * This file is part of Proton Drive.
  *
  * Proton Drive is free software: you can redistribute it and/or modify
@@ -16,11 +16,19 @@
  * along with Proton Drive.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.proton.drive.android.settings.domain.entity
+package me.proton.drive.android.settings.domain.usecase
 
-data class UiSettings(
-    val layoutType: LayoutType = LayoutType.DEFAULT,
-    val themeStyle: ThemeStyle = ThemeStyle.DEFAULT,
-    val homeTab: HomeTab? = null,
-    val deviceName: String = "",
-)
+import android.os.Build
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import me.proton.core.domain.entity.UserId
+import me.proton.drive.android.settings.domain.UiSettingsRepository
+import javax.inject.Inject
+
+class GetDeviceName @Inject constructor(
+    private val repository: UiSettingsRepository,
+) {
+    operator fun invoke(userId: UserId) = repository.getUiSettingsFlow(userId)
+        .map { settings -> settings.deviceName.ifBlank { Build.MODEL } }
+        .distinctUntilChanged()
+}

@@ -42,4 +42,7 @@ abstract class UiSettingsDao : BaseDao<UiSettingsEntity>() {
 
     @Query("UPDATE UiSettingsEntity SET home_tab = :homeTab WHERE user_id = :userId")
     abstract suspend fun updateHomeTab(userId: UserId, homeTab: HomeTab): Int
+
+    @Query("UPDATE UiSettingsEntity SET device_name = :deviceName WHERE user_id = :userId")
+    abstract suspend fun updateDeviceName(userId: UserId, deviceName: String): Int
 }

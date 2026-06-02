@@ -41,13 +41,15 @@ class SetupPhotosBackup @Inject constructor(
     suspend operator fun invoke(
         folderId: FolderId,
         folderFilter: (BucketEntry) -> Boolean,
+        deviceName: String,
     ) = coRunCatching {
         setupPhotosConfigurationBackup(folderId).getOrThrow()
         val userId = folderId.userId
         val bucketEntries = bucketRepository.getAll()
         bucketEntries.filter(folderFilter).map { entry ->
             val albumId = entry.bucketName?.let { name ->
-                createAlbum(userId, name, isLocked = false)
+                val albumName = "$name ($deviceName)"
+                createAlbum(userId, albumName, isLocked = false)
                     .onFailure { error ->
                         CoreLogger.w(BACKUP, error, "Cannot create album for bucket: ${entry.bucketId}")
                     }

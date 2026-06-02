@@ -62,6 +62,8 @@ import me.proton.core.drive.photo.domain.entity.TagsMigrationStatistics
 import me.proton.core.drive.photo.domain.usecase.GetTagsMigrationStatistics
 import me.proton.core.drive.volume.domain.entity.Volume
 import me.proton.core.drive.volume.domain.usecase.GetOldestActiveVolume
+import me.proton.drive.android.settings.domain.usecase.GetDeviceName
+import me.proton.drive.android.settings.domain.usecase.UpdateDeviceName
 import java.text.NumberFormat
 import java.util.Locale
 import javax.inject.Inject
@@ -83,6 +85,8 @@ class PhotosBackupViewModel @Inject constructor(
     private val configurationProvider: ConfigurationProvider,
     private val getGetTagsMigrationStatistics: GetTagsMigrationStatistics,
     val backupPermissionsViewModel: BackupPermissionsViewModel,
+    private val getDeviceName: GetDeviceName,
+    private val updateDeviceName: UpdateDeviceName,
 ) : ViewModel(), UserViewModel by UserViewModel(savedStateHandle) {
 
     val initialViewState: PhotosBackupViewState = PhotosBackupViewState(
@@ -121,9 +125,11 @@ class PhotosBackupViewModel @Inject constructor(
         isPhotosEnabled(userId),
         getPhotosConfiguration(userId),
         isIgnoringBatteryOptimizations(),
-        tagsMigrationStatistics
-    ) { enabled, configuration, isIgnoringBatteryOptimizations, tagsMigrationStatistics ->
+        tagsMigrationStatistics,
+        getDeviceName(userId),
+    ) { enabled, configuration, isIgnoringBatteryOptimizations, tagsMigrationStatistics, deviceName ->
         initialViewState.copy(
+            deviceName = deviceName,
             backup = initialViewState.backup.copy(checked = enabled),
             mobileData = initialViewState.mobileData.copy(
                 checked = configuration?.networkType == BackupNetworkType.CONNECTED,
@@ -218,6 +224,14 @@ class PhotosBackupViewModel @Inject constructor(
         override val onToggleIgnoringBatteryOptimizations: (Context) -> Unit = { context ->
             viewModelScope.launch {
                 context.launchIgnoreBatteryOptimizations(isIgnoringBatteryOptimizations().firstOrNull() == true)
+            }
+        }
+
+        override val onDeviceNameChange: (String) -> Unit = { name ->
+            viewModelScope.launch {
+                updateDeviceName(userId, name).onFailure { error ->
+                    error.log(VIEW_MODEL, "Failed to update device name")
+                }
             }
         }
 

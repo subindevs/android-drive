@@ -26,6 +26,7 @@ data class PhotosBackupViewState(
     val backup: PhotosBackupOption,
     val mobileData: PhotosBackupOption,
     val ignoringBatteryOptimizations: PhotosBackupOption,
+    val deviceName: String = "",
     val tagsMigrationProgressState: TagsMigrationProgressState? = null,
 )
 

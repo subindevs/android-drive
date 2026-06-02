@@ -88,6 +88,7 @@
     <string name="photos_backup_option_mobile_data">Use mobile data to backup photos</string>
     <string name="photos_backup_option_ignoring_battery_optimizations">Disable battery optimization</string>
     <string name="photos_backup_option_ignoring_battery_optimizations_description">Allows uninterrupted backup when the app is running in the background.</string>
+    <string name="photos_backup_device_name_label">Device name</string>
     <string name="photos_backup_in_app_notification_turned_on">Photo backup is turned on</string>
     <string name="photos_backup_in_app_notification_turned_off">Photo backup is turned off</string>
     <string name="photos_backup_state_completed">Backup complete</string>

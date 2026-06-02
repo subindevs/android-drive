@@ -27,4 +27,5 @@ fun UiSettings.toEntity(userId: UserId) = UiSettingsEntity(
     layoutType = layoutType,
     themeStyle = themeStyle,
     homeTab = homeTab,
+    deviceName = deviceName,
 )

@@ -71,6 +71,12 @@ class UiSettingsRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun updateDeviceName(userId: UserId, deviceName: String) {
+        updateOrInsert(userId, { dao.updateDeviceName(userId, deviceName) }) {
+            UiSettings(deviceName = deviceName)
+        }
+    }
+
     override suspend fun hasShownOnboarding(): Boolean =
         dataStore.onboardingShown > 0L
 

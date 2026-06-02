@@ -35,6 +35,7 @@ import me.proton.core.drive.base.domain.provider.ConfigurationProvider
 import me.proton.core.drive.base.domain.util.coRunCatching
 import me.proton.core.drive.link.domain.entity.FolderId
 import me.proton.core.drive.link.domain.extension.userId
+import me.proton.drive.android.settings.domain.usecase.GetDeviceName
 import javax.inject.Inject
 import me.proton.core.drive.i18n.R as I18N
 
@@ -46,6 +47,7 @@ class EnablePhotosBackupImpl @Inject constructor(
     private val permissionsManager: BackupPermissionsManager,
     private val configurationProvider: ConfigurationProvider,
     private val announceEvent: AnnounceEvent,
+    private val getDeviceName: GetDeviceName,
 ) : EnablePhotosBackup {
 
     override suspend operator fun invoke(folderId: FolderId): Result<PhotoBackupState> = coRunCatching {
@@ -70,7 +72,8 @@ class EnablePhotosBackupImpl @Inject constructor(
         folderFilter: (BucketEntry) -> Boolean
     ): Result<PhotoBackupState> = coRunCatching {
         if (backupManager.isEnabled(folderId).first().not()) {
-            setupPhotosBackup(folderId, folderFilter).getOrThrow().let { results ->
+            val deviceName = getDeviceName(folderId.userId).first()
+            setupPhotosBackup(folderId, folderFilter, deviceName).getOrThrow().let { results ->
                 if (results.isEmpty()) {
                     PhotoBackupState.NoFolder(configurationProvider.backupDefaultBucketName)
                 } else {

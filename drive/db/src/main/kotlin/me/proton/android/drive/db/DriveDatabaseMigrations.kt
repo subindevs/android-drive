@@ -687,4 +687,10 @@ object DriveDatabaseMigrations {
             BackupDatabase.MIGRATION_9.migrate(db)
         }
     }
+
+    val MIGRATION_106_107 = object : Migration(106, 107) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            AppUiSettingsDatabase.MIGRATION_2.migrate(db)
+        }
+    }
 }

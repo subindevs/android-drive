@@ -29,6 +29,7 @@ driveModule(
     i18n = true,
     socialTest = true,
 ) {
+    api(project(":app-ui-settings"))
     api(project(":photos:domain"))
     api(project(":drive:backup:data"))
     api(project(":drive:base:data"))

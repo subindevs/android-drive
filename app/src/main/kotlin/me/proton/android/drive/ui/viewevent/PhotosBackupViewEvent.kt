@@ -24,4 +24,5 @@ interface PhotosBackupViewEvent {
     val onToggleBackup: () -> Unit
     val onToggleMobileData: () -> Unit
     val onToggleIgnoringBatteryOptimizations: (Context) -> Unit
+    val onDeviceNameChange: (String) -> Unit
 }

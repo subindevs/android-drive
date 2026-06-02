@@ -32,6 +32,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -147,6 +148,8 @@ fun PhotosBackup(
                 backup = viewState.backup,
                 mobileData = viewState.mobileData,
                 ignoringBatteryOptimizations = viewState.ignoringBatteryOptimizations,
+                deviceName = viewState.deviceName,
+                onDeviceNameChange = { viewEvent.onDeviceNameChange(it) },
             )
             content()
         }
@@ -162,6 +165,8 @@ fun BackupPhotosOptions(
     backup: PhotosBackupOption,
     mobileData: PhotosBackupOption,
     ignoringBatteryOptimizations: PhotosBackupOption,
+    deviceName: String = "",
+    onDeviceNameChange: (String) -> Unit = {},
 ) {
     Column(modifier) {
         BackupPhotosToggle(option = backup, onToggle = onToggleBackup)
@@ -169,6 +174,16 @@ fun BackupPhotosOptions(
         BackupPhotosToggle(
             option = ignoringBatteryOptimizations,
             onToggle = onToggleIgnoringBatteryOptimizations,
+        )
+        OutlinedTextField(
+            value = deviceName,
+            onValueChange = onDeviceNameChange,
+            label = { Text(stringResource(I18N.string.photos_backup_device_name_label)) },
+            placeholder = { Text(android.os.Build.MODEL) },
+            singleLine = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = DefaultSpacing, vertical = SmallSpacing),
         )
     }
 }
